@@ -25,7 +25,7 @@ function [t,x,a0,a1]=batchGenTsStepD(tsName,dMin,dStep,dMax,theta,lambda,indref,
 %       a0, a1      = Lorentz parameters       
 %	Example:
 %		[t,x,a0,a1]=batchGenTsStepD('test',5,5,30,theta,lambda,indref,eta,tcelsius,100,200,1);
-%-------------------------------------------------------------------------------%
+%-------------------------------------------------------------------------------
 % Original Comment of Dan Chicea
 % functia incarca matricea cu serii temporale, cate o serie pe cate o
 % coloana, cate o coloana pentru fiecare diametru

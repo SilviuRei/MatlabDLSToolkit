@@ -25,7 +25,7 @@ function [t,x,a0,a1]=batchGenTsStepTheta(tsName,diam,thetaMin,thetaStep,thetaMax
 %       a0, a1      = Lorentz parameters       
 %	Example:
 %		[t,x,a0,a1]=batchGenTsStepTheta('test_theta_',diam,0,pi/8,pi/2,lambda,indref,eta,tcelsius,100,200,1);
-%-------------------------------------------------------------------------------%
+%-------------------------------------------------------------------------------
 % Original Comment of Dan Chicea
 % functia incarca matricea cu serii temporale, cate o serie pe cate o
 % coloana, cate o coloana pentru fiecare diametru
@@ -61,4 +61,4 @@ if optsav >= 1 % vrea scris fisierul psd pe disc
 end
 t2=etime(clock,t1);
 [h, m, s] = sec2time(t2);
-disp(['[+++] Total Execution Time for ' int2str(nSteps) ' diameters is: ' num2str(h) 'h:' num2str(m) 'm:' num2str(s) 's'])
+disp(['[+++] Total Execution Time for ' int2str(nSteps) ' thetas is: ' num2str(h) 'h:' num2str(m) 'm:' num2str(s) 's'])
