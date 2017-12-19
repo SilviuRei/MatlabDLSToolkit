@@ -1,4 +1,4 @@
-function [d,a0,a1,roF] = batchDLSFindA0A1RollOffFrequency (m, bS, eS, sS, index1, index2, istep, frequency, theta, lambda, indref, eta, tcelsius, deltaFit, figType, dispMode, cleanMode)
+function [d,a0,a1,roF] = batchDLSFindA0A1RollOffFrequency (m, bS, eS, sS, index1, index2, istep, frequency, theta, lambda, indref, eta, tcelsius,a0start, a0min, a0max, a1start, a1min, a1max, deltaFit, figType, dispMode, cleanMode)
 %-------------------------------------------------------------------------------
 % Version 20171117, Silviu Rei
 % function [roF] = batchDLSRollOffFrequency (a0, a1, d, index1, index2, istep, frequency, deltaFit, figType, dispMode)
@@ -27,10 +27,9 @@ function [d,a0,a1,roF] = batchDLSFindA0A1RollOffFrequency (m, bS, eS, sS, index1
 %	Output:
 %		roF         = roll-off frequency in Hz
 %	Example:
-%		[d,a0,a1,roF] = batchDLSFindA0A1RollOffFrequency (m, 50, 3000, 50, 16000, 20, 'png', 1, 1);
+%		[d,a0,a1,roF] = batchDLSFindA0A1RollOffFrequency (x, 5, 30, 5, 1, 6, 1, 16000, theta, lambda, indref, eta, tcelsius,a0start, a0min, a0max, a1start, a1min, a1max, 20, 'png', 0, 1)
 %-------------------------------------------------------------------------------
-
-[d,a0,a1,deltaT] = batchDLSFitFindA0A1(m, index1, index2, istep, frequency, theta, lambda, indref, eta, tcelsius, dispMode, cleanMode);
-%[mrows,mcolumns] = size(m); 
 dm = bS:sS:eS;
-roF = batchDLSRollOffFrequency (a0, a1, dm, index1, index2, istep, frequency, deltaFit, figType, dispMode);
+[d,a0,a1,~] = batchDLSFitFindA0A1(m, dm, index1, index2, istep, frequency, theta, lambda, indref, eta, tcelsius, a0start, a0min, a0max, a1start, a1min, a1max,dispMode, cleanMode);
+%[mrows,mcolumns] = size(m); 
+roF = batchDLSRollOffFrequency(a0, a1, dm, index1, index2, istep, lambda,tcelsius,theta,indref,eta,frequency, deltaFit, figType, dispMode);

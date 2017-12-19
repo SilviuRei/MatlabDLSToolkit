@@ -77,18 +77,20 @@ pscalc=florentz2(arg,f);
 chi2min=(1/n)*sum((psexp-pscalc).^2);
 %
 if control >=1  %vrea afisat pe ecran
-    figure(1);
+    figure(10);
     loglog(f, psexp,'ob',f,pscalc,'-r',...
                         'LineWidth',2)
-    title([nume,'  a0:',num2str(a0),'  a1:',num2str(a1)]);
+    title(['Power Spectrum Lorentz Fit', newline, ...
+        'Size=', nume,' nm', newline, ...
+        'a0=',num2str(a0),', a1=',num2str(a1)]);
     xlabel('f, Hz');
     ylabel('PS, a.u.')
 end
 %
 if control >= 2 %vrea figura salvata pe disc
     format('long');
-    numeg=[nume,'-a0-',num2str(a0),'-a1-',num2str(a1)];
-    saveas(1,[numeg,'.',tip],tip);
+    numeg=['chi2dlssq-d-', nume,'-a0-',num2str(a0),'-a1-',num2str(a1)];
+    saveas(10,[numeg,'.',tip],tip);
 end
 %
 % salveaza datele ca matrice, f, psexp, pscalc

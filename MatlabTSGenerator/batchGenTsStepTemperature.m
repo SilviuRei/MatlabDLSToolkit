@@ -35,7 +35,7 @@ function [t,x,a0,a1]=batchGenTsStepTemperature(tsName,diam,theta,lambda,indref,e
 % extensia ext si fisierul cu valorile diametrelor, a0 si a1 pentru fiecare
 % serie
 %
-disp('[+++] DLS Time Series Generator Started');
+disp('[+++] DLS Time Series Generator Started - Temperature Variant');
 t1=clock;
 nSteps=(tcelsiusMax-tcelsiusMin)/tcelsiusStep;
 tcelsius=zeros(1,nSteps);

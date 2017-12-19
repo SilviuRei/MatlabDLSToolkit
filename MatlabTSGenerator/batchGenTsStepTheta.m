@@ -35,7 +35,7 @@ function [t,x,a0,a1]=batchGenTsStepTheta(tsName,diam,thetaMin,thetaStep,thetaMax
 % extensia ext si fisierul cu valorile diametrelor, a0 si a1 pentru fiecare
 % serie
 %
-disp('[+++] DLS Time Series Generator Started');
+disp('[+++] DLS Time Series Generator Started - Theta Variant');
 t1=clock;
 nSteps=(thetaMax-thetaMin)/thetaStep;
 theta=zeros(1,nSteps);

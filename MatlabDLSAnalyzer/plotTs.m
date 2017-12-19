@@ -1,6 +1,6 @@
 function [] = plotTs(name, ts, t, typeG)
 %-------------------------------------------------------------------------------
-%	Version 20171217, Silviu Rei
+%	Version 20171219, Silviu Rei
 %	function [] = plotTs(name, ts, t, typeG)
 %		The funtion plots and saves the plot for a time series
 %	Input:
@@ -15,7 +15,7 @@ function [] = plotTs(name, ts, t, typeG)
 figureNumber=5;
 figure(figureNumber);
 plot(t, ts);
-title('Signal');
+title(name);
 xlabel('Time (s)');
 ylabel('Signal Amplitude');
 nameg=[name,'-ts.png'];

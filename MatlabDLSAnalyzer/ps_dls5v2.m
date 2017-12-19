@@ -39,13 +39,17 @@ buf=[f,ps];     %matricea cu coloana f si colana ps
 buf1=buf(nr1+1:n-nr2,:);
 %
 if opt>=1
+    numefig=['Power Spectrum Logarithmic Scale',newline,'Size=',nume,' nm',newline,'Frequency=',num2str(frecv), ' Hz'];
     figure(1)
     loglog(buf1(:,1),buf1(:,2),'-');
+    title(numefig);
     xlabel('f, Hz');
     ylabel('PS');
 %
+    numefig=['Power Spectrum',newline,'Size=',nume,' nm',newline,'Frequency=',num2str(frecv), ' Hz'];
     figure(2)
     plot(buf1(:,1),buf1(:,2),'-');
+    title(numefig);
     xlabel('f, Hz');
     ylabel('PS');
 end

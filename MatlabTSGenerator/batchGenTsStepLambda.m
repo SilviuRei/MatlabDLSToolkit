@@ -35,7 +35,7 @@ function [t,x,a0,a1]=batchGenTsStepLambda(tsName,diam,theta,lambdaMin,lambdaStep
 % extensia ext si fisierul cu valorile diametrelor, a0 si a1 pentru fiecare
 % serie
 %
-disp('[+++] DLS Time Series Generator Started');
+disp('[+++] DLS Time Series Generator Started - Lambda Variant');
 t1=clock;
 nSteps=(lambdaMax-lambdaMin)/lambdaStep;
 lambda=zeros(1,nSteps);
