@@ -1,12 +1,14 @@
-function [indref,lambda,eta,tcelsius,theta,diam]=initconst5(thetagrade, tcelsius)
+function [indref,lambda,eta,tcelsius,theta,diam]=initconst5(thetagrade, tcelsius, solvent)
 %-------------------------------------------------------------------------------
-% Version 20171118, Silviu Rei based on initconst4 by Dan Chicea
+% Version 20171119, Silviu Rei based on initconst4 by Dan Chicea
 % function [indref,lambda,tcelsius,theta]=initconst5(thetagrade)
 % 
 %   The function initializes the physical constants to be used
 %   with DLS time series generator
 %	Input:
 %       thetagrade  = measuring angle in degrees
+%       tcelsius    = temperature in celsius
+%       solvent     = 'air' for air, 'water' for water
 %	Output:
 %		indref      = refractive index of the solvent
 %       lambda      = wavelength of the laser light
@@ -18,13 +20,15 @@ function [indref,lambda,eta,tcelsius,theta,diam]=initconst5(thetagrade, tcelsius
 %	Example:
 %		[indref,lambda,eta,tcelsius,theta,diam]=initconst5(90,20);
 %-------------------------------------------------------------------------------
-indref=1.0003;%air
-%indref=1.333;%water
-eta=1.8369247E-5; %air viscosity at 20C
-%eta=water_viscosity(tcelsius);  % vascozitate apei, in daP
+if solvent == 'air'
+    indref=1.0003;%air
+    eta=air_viscosity(tcelsius); %air
+else if solvent == 'water'
+    indref=1.333;%water
+    eta=water_viscosity(tcelsius);  %water
+end.
+    
 lambda=633;
-%tcelsius=20;
 theta=thetagrade*pi/180;
 diam=5;
 rand('twister',10000*abs(cputime)); %initializeaza seria de numere aleatoare
-%
