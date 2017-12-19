@@ -1,18 +1,18 @@
-function [t,x,a0,a1]=loadTsStepD(tsName,dmin,dstep,dmax,theta,lambda,indref,eta,tcelsius,fs,nt,optsav);
+function [t,x,a0,a1]=batchGenTsStepLambda(tsName,diam,theta,lambdaMin,lambdaStep,lambdaMax,indref,eta,tcelsius,fs,nt,optsav);
 %-------------------------------------------------------------------------------
 % Version 20171119, Silviu Rei based on load_ts36 by Dan Chicea
-% [t,x,a0,a1]=loadTsStepD(tsName,dmin,dstep,dmax,theta,lambda,indref,eta,tcelsius,fs,nt,optsav);
+% function [t,x,a0,a1]=batchGenTsStepLambda(tsName,diam,theta,lambdaMin,lambdaStep,lambdaMax,indref,eta,tcelsius,fs,nt,optsav);
 % 
-%   The function generates time series for DLS for various sizes, within
+%   The function generates time series for DLS for various lambda, within
 %   the defined range.
 %
 %	Input:
 %       tsName      = name of the time series
-%       dmin        = minimum diameter of particles in nm
-%       dstep       = step size
-%       dmax        = maximum diameter of particles in nm
-%       theta       = measuring ange in RAD
-%       lambda      = laser wavelength in nm
+%       diam        = diameter of particles in nm
+%       theta       = measuring angle in RAD
+%       lambdaMin   = minimum laser wavelength in nm
+%       lambdaStep  = step for laser wavelength in nm
+%       lambdaMax   = maximum laser wavelength in nm
 %       indref      = refractive index of the solvent
 %       eta         = viscosity of the solvent
 %       tcelsiuis   = celsius temperature
@@ -24,7 +24,7 @@ function [t,x,a0,a1]=loadTsStepD(tsName,dmin,dstep,dmax,theta,lambda,indref,eta,
 %       x           = time series
 %       a0, a1      = Lorentz parameters       
 %	Example:
-%		[t,x,a0,a1]=loadTsStepD('test',5,5,30,theta,lambda,indref,eta,tcelsius,100,200,1);
+%		[t,x,a0,a1]=batchGenTsStepLambda(tsName,diam,theta,lambdaMin,lambdaStep,lambdaMax,indref,eta,tcelsius,fs,nt,optsav);
 %-------------------------------------------------------------------------------%
 % Original Comment of Dan Chicea
 % functia incarca matricea cu serii temporale, cate o serie pe cate o
@@ -35,37 +35,30 @@ function [t,x,a0,a1]=loadTsStepD(tsName,dmin,dstep,dmax,theta,lambda,indref,eta,
 % extensia ext si fisierul cu valorile diametrelor, a0 si a1 pentru fiecare
 % serie
 %
-disp('[+++] DLS Time Series Generator Started - Size Step Variant');
+disp('[+++] DLS Time Series Generator Started');
 t1=clock;
-nSteps=(dmax-dmin)/dstep;
-d=zeros(1,nSteps);
+nSteps=(thetaMax-thetaMin)/thetaStep;
+theta=zeros(1,nSteps);
 x=zeros(nt,nSteps);
 a0=zeros(nSteps,1);
 a1=zeros(nSteps,1);
 i=0;
-for dd=dmin:dstep:dmax
+for thetaTemp=thetaMin:thetaStep:thetaMax
     tic
     i=i+1;
-    d(i)=dd;
-    [t,x(:,i),a0(i,1),a1(i,1)]=gents37(tsName, d(i), theta, lambda, indref, eta, tcelsius, fs, nt, 0);
+    theta(i)=thetaTemp;
+    [t,x(:,i),a0(i,1),a1(i,1)]=gents37(tsName, diam, theta(i), lambda, indref, eta, tcelsius, fs, nt, 0);
     deltaT=toc;
     timeLeft=(nSteps-i)*deltaT;
     [h, m, s] = sec2time(timeLeft);
     disp(['[+++] Step: ' num2str(i) ' 	out of ' num2str(nSteps) ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
 end
-%
-%rez=[d',a0,a1]; %le aduna intr-o matrice pt verificare cu fitare
-%
 if optsav >= 1 % vrea scris fisierul psd pe disc
-    save([tsName,'-',num2str(dmin),'-',num2str(dstep),'-',num2str(dmax),'_ts.ext'],'x','-ascii');
-    save([tsName,'-',num2str(dmin),'-',num2str(dstep),'-',num2str(dmax),'_d.txt'],'d','-ascii');
-    save([tsName,'-',num2str(dmin),'-',num2str(dstep),'-',num2str(dmax),'_a0.txt'],'a0','-ascii');
-    save([tsName,'-',num2str(dmin),'-',num2str(dstep),'-',num2str(dmax),'_a1.txt'],'a1','-ascii');
-    %save([tsName,'-',int2str(dmin),'-',int2str(dstep),'-',int2str(dmax),'_d_a0_a1_g36.txt'],'rez','-ascii');
+    save([tsName,'-',num2str(thetaMin),'-',num2str(thetaStep),'-',num2str(thetaMax),'_ts.ext'],'x','-ascii');
+    save([tsName,'-',num2str(thetaMin),'-',num2str(thetaStep),'-',num2str(thetaMax),'_theta.txt'],'theta','-ascii');
+    save([tsName,'-',num2str(thetaMin),'-',num2str(thetaStep),'-',num2str(thetaMax),'_a0.txt'],'a0','-ascii');
+    save([tsName,'-',num2str(thetaMin),'-',num2str(thetaStep),'-',num2str(thetaMax),'_a1.txt'],'a1','-ascii');
 end
 t2=etime(clock,t1);
 [h, m, s] = sec2time(t2);
 disp(['[+++] Total Execution Time for ' int2str(nSteps) ' diameters is: ' num2str(h) 'h:' num2str(m) 'm:' num2str(s) 's'])
-%
-
-

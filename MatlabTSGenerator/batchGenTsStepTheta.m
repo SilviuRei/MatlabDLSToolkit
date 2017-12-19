@@ -1,17 +1,17 @@
-function [t,x,a0,a1]=loadTsStepTheta(tsName,diam,thetaMin,thetaStep,thetaMax,lambda,indref,eta,tcelsius,fs,nt,optsav);
+function [t,x,a0,a1]=batchGenTsStepTheta(tsName,diam,thetaMin,thetaStep,thetaMax,lambda,indref,eta,tcelsius,fs,nt,optsav);
 %-------------------------------------------------------------------------------
 % Version 20171118, Silviu Rei based on load_ts36 by Dan Chicea
-% [t,x,a0,a1]=loadTsStepTheta(tsName,diam,thetaMin,thetaStep,thetaMax,lambda,indref,eta,tcelsius,fs,nt,optsav);
+% [t,x,a0,a1]=batchGenTsStepTheta(tsName,diam,thetaMin,thetaStep,thetaMax,lambda,indref,eta,tcelsius,fs,nt,optsav);
 % 
-%   The function generates time series for DLS for various sizes, within
+%   The function generates time series for DLS for various theta, within
 %   the defined range.
 %
 %	Input:
 %       tsName      = name of the time series
 %       diam        = diameter of particles in nm
 %       thetaMin    = minimum measuring angle in RAD
-%       thetastep   = step measuring angle in RAD
-%       thetamax    = maximum measuring angle in RAD
+%       thetaStep   = step measuring angle in RAD
+%       thetaMax    = maximum measuring angle in RAD
 %       lambda      = laser wavelength in nm
 %       indref      = refractive index of the solvent
 %       eta         = viscosity of the solvent
@@ -24,7 +24,7 @@ function [t,x,a0,a1]=loadTsStepTheta(tsName,diam,thetaMin,thetaStep,thetaMax,lam
 %       x           = time series
 %       a0, a1      = Lorentz parameters       
 %	Example:
-%		[t,x,a0,a1]=loadTsStepTheta('test_theta_',diam,0,pi/8,pi/2,lambda,indref,eta,tcelsius,100,200,1);
+%		[t,x,a0,a1]=batchGenTsStepTheta('test_theta_',diam,0,pi/8,pi/2,lambda,indref,eta,tcelsius,100,200,1);
 %-------------------------------------------------------------------------------%
 % Original Comment of Dan Chicea
 % functia incarca matricea cu serii temporale, cate o serie pe cate o
