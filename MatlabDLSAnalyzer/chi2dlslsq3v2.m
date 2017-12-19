@@ -1,4 +1,4 @@
-function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3(nume,teta,indref,lambda,tcelsius,eta,a0start,a0min,a0max,a1start,a1min,a1max,control,tip, dispMode);
+function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3v2(nume,theta,indref,lambda,tcelsius,eta,a0start,a0min,a0max,a1start,a1min,a1max,control,tip, dispMode);
 % 
 %   Functia  chi2dlslsq1 citeste fisierul nume.psd in care sunt perechile de tip
 %   frecventa si power amplitude.
@@ -105,7 +105,7 @@ save(numeout,'rez','-ascii');
 kb=1.3806503e-23;       %constanta lui Boltzman
 tkelvin=tcelsius+273.15;    %temperatura absoluta
 %eta=water_viscosity(tcelsius);
-kmare=(4*pi*indref*sin(0.5*teta))/lambda;
+kmare=(4*pi*indref*sin(0.5*theta))/lambda;
 raza=(2*kb*tkelvin*kmare.^2)/(6*pi*eta*a1);
 diam=2*raza;
 %
@@ -115,8 +115,8 @@ if dispMode == 1
 	disp('________________________________________')
 	disp(' ');
 	disp([ ' Numele fisierului      ',nume]);
-	disp([' Unghi de masura, radiani ' num2str(teta)]);
-	disp([' Unghi de masura, grade ',num2str((180/pi)*teta)]);
+	disp([' Unghi de masura, radiani ' num2str(theta)]);
+	disp([' Unghi de masura, grade ',num2str((180/pi)*theta)]);
 	disp([' a0 start                ',num2str(a0start)]);
 	disp([' a0 min                  ',num2str(a0min)]);
 	disp([' a0 max                  ',num2str(a0max)]);

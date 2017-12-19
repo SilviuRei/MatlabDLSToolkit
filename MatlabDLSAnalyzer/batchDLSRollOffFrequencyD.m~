@@ -1,16 +1,16 @@
-function [roF] = batchDLSRollOffFrequency (a0, a1, d, index1, index2, istep,lambda,tcelsius,theta,indref,eta,frequency, deltaFit, figType, dispMode)
+function [roF] = batchDLSRollOffFrequencyD (a0,a1,d,startSize,endSize,stepSize,lambda,tcelsius,theta,indref,eta,frequency, deltaFit, figType, dispMode)
 %-------------------------------------------------------------------------------
 % Version 20171117, Silviu Rei
-% function [roF] = batchDLSRollOffFrequency (a0, a1, d, index1, index2, istep, frequency, deltaFit, figType, dispMode)
+% function [roF] = batchDLSRollOffFrequencyD (a0, a1, d, index1, index2, istep,lambda,tcelsius,theta,indref,eta,frequency, deltaFit, figType, dispMode)
 %   The function finds the roll-off Frequency from the Power Spectral
 %   Density for a Dynamic Light Scattering Lorentzian function
 %   in batch mode
 %	Input:
 %       a0,a1       = Lorentz function parameters (vectors)
 %       d           = particle sizes vector
-%       index1      = start size
-%       index2      = end size
-%       istep       = size step
+%       startSize   = start size
+%       endSize     = end size
+%       stepSize    = size step
 %       lambda      = laser light wavelength (nm)
 %       tcelsius    = temperature (C)
 %       theta       = scattering angle (rad)
@@ -23,16 +23,16 @@ function [roF] = batchDLSRollOffFrequency (a0, a1, d, index1, index2, istep,lamb
 %	Output:
 %		roF         = roll-off frequency in Hz
 %	Example:
-%		batchDLSRollOffFrequency (a0, a1, d, 20, 3000, 20, 16000, 20, 'png', 1);
+%		
 %-------------------------------------------------------------------------------
-    deltaInterval = index2 - index1;
-    maxDeltaInterval = deltaInterval/istep;
+    deltaInterval = endSize - startSize;
+    maxDeltaInterval = deltaInterval/stepSize+1;
     t0 = clock;
     for i=1:maxDeltaInterval
         tic
-        a0n(i)=a0(istep*i);
-        a1n(i)=a1(istep*i);
-        dn(i)=d(istep*i);
+        a0n(i)=a0(i);
+        a1n(i)=a1(i);
+        dn(i)=d(i);
         roF(i)=dlsRollOffFrequency(dn(i),lambda,tcelsius,theta,indref,eta,a0n(i), a1n(i), frequency, deltaFit, figType, dispMode);
         deltat = toc;
         timeLeft = deltat*(maxDeltaInterval-i);
@@ -58,9 +58,9 @@ function [roF] = batchDLSRollOffFrequency (a0, a1, d, index1, index2, istep,lamb
     xlabel('Particle Size (nm)');
     ylabel('Roll-off Frequency (Hz)');
     
-    figureNameA0=['dls_a0-' num2str(index1) '-' num2str(index2) '-' num2str(istep) '.png'];
-    figureNameA1=['dls_a1-' num2str(index1) '-' num2str(index2) '-' num2str(istep) '.png'];
-    figureNameRoF=['dls_RollOffFrequency_-' num2str(index1) '-' num2str(index2) '-' num2str(istep) '.png'];
+    figureNameA0=['dls_a0-' num2str(startSize) '-' num2str(endSize) '-' num2str(stepSize) '.png'];
+    figureNameA1=['dls_a1-' num2str(startSize) '-' num2str(endSize) '-' num2str(stepSize) '.png'];
+    figureNameRoF=['dls_RollOffFrequency_-' num2str(startSize) '-' num2str(endSize) '-' num2str(stepSize) '.png'];
     
     saveas(5,figureNameA0,figType);
     saveas(6,figureNameA1,figType);

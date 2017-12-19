@@ -10,12 +10,13 @@ function [indref,lambda,eta,tcelsius,theta,diam]=initconst5(thetagrade, tcelsius
 %	Output:
 %		indref      = refractive index of the solvent
 %       lambda      = wavelength of the laser light
+%       eta         = viscosity in N m/s2
 %       tcelsius    = temperature in Celsius
 %       theta       = measuring angle in radian
 %       diam        = particle size in nm
 %       
 %	Example:
-%		[indref,lambda,tcelsius,theta]=initconst5(90);
+%		[indref,lambda,eta,tcelsius,theta,diam]=initconst5(90,20);
 %-------------------------------------------------------------------------------
 indref=1.0003;%air
 %indref=1.333;%water
