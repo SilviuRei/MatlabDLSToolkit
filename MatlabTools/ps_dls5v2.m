@@ -1,5 +1,7 @@
 function [buf1]=ps_dls5(nume,frecv,nr1,nr2,tip,opt, dispMode)
 %
+%   [2017.12.17] S.Rei - added save of PS figure (fig2)
+%
 %   ps_dls5(nume,frecv,nr1,nr2,tip,opt)
 %
 %   Functia citeste un fisier de tip ASCII cu numele in variabila
@@ -37,20 +39,25 @@ buf=[f,ps];     %matricea cu coloana f si colana ps
 buf1=buf(nr1+1:n-nr2,:);
 %
 if opt>=1
+    numefig=['Power Spectrum Logarithmic Scale',newline,'Size=',nume,' nm',newline,'Frequency=',num2str(frecv), ' Hz'];
     figure(1)
     loglog(buf1(:,1),buf1(:,2),'-');
+    title(numefig);
     xlabel('f, Hz');
     ylabel('PS');
 %
+    numefig=['Power Spectrum',newline,'Size=',nume,' nm',newline,'Frequency=',num2str(frecv), ' Hz'];
     figure(2)
     plot(buf1(:,1),buf1(:,2),'-');
+    title(numefig);
     xlabel('f, Hz');
     ylabel('PS');
 end
 %
 % scrie datele daca este cazul
 %
-numefisfig=[nume];
+numefisfig1=[nume,'-ps-loglog'];
+numefisfig2=[nume,'-ps'];
 %
 if opt >= 0
     numefisout=[nume,'.fps'];
@@ -58,6 +65,7 @@ if opt >= 0
 end
 %
 if opt >=2
-    saveas(1,numefisfig,tip);
+    saveas(1,numefisfig1,tip);
+    saveas(2,numefisfig2,tip);
 end
 %

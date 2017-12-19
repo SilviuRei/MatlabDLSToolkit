@@ -1,4 +1,4 @@
-function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3(nume,teta,indref,lambda,tcelsius,a0start,a0min,a0max,a1start,a1min,a1max,control,tip, dispMode);
+function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3v2(nume,theta,indref,lambda,tcelsius,eta,a0start,a0min,a0max,a1start,a1min,a1max,control,tip, dispMode);
 % 
 %   Functia  chi2dlslsq1 citeste fisierul nume.psd in care sunt perechile de tip
 %   frecventa si power amplitude.
@@ -26,6 +26,8 @@ function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3(nume,teta,indref,lambda,tcels
 % Apelare:
 % [diam,a0,a1,chi2min,exitflag]=chi2dlslsq2(nume,teta,indref,lambda,tcelsius,a0start,a0min,a0max,a1start,a1min,a1max,control,tip);
 %
+
+lambda=1.e-9*lambda;
 
 if dispMode == 1
 	disp('___________________________________');
@@ -75,18 +77,20 @@ pscalc=florentz2(arg,f);
 chi2min=(1/n)*sum((psexp-pscalc).^2);
 %
 if control >=1  %vrea afisat pe ecran
-    figure(1);
+    figure(10);
     loglog(f, psexp,'ob',f,pscalc,'-r',...
                         'LineWidth',2)
-    title([nume,'  a0:',num2str(a0),'  a1:',num2str(a1)]);
+    title(['Power Spectrum Lorentz Fit', newline, ...
+        'Size=', nume,' nm', newline, ...
+        'a0=',num2str(a0),', a1=',num2str(a1)]);
     xlabel('f, Hz');
     ylabel('PS, a.u.')
 end
 %
 if control >= 2 %vrea figura salvata pe disc
     format('long');
-    numeg=[nume,'-a0-',num2str(a0),'-a1-',num2str(a1)];
-    saveas(1,[numeg,'.',tip],tip);
+    numeg=['chi2dlssq-d-', nume,'-a0-',num2str(a0),'-a1-',num2str(a1)];
+    saveas(10,[numeg,'.',tip],tip);
 end
 %
 % salveaza datele ca matrice, f, psexp, pscalc
@@ -102,8 +106,8 @@ save(numeout,'rez','-ascii');
 %
 kb=1.3806503e-23;       %constanta lui Boltzman
 tkelvin=tcelsius+273.15;    %temperatura absoluta
-eta=water_viscosity(tcelsius);
-kmare=(4*pi*indref*sin(0.5*teta))/lambda;
+%eta=water_viscosity(tcelsius);
+kmare=(4*pi*indref*sin(0.5*theta))/lambda;
 raza=(2*kb*tkelvin*kmare.^2)/(6*pi*eta*a1);
 diam=2*raza;
 %
@@ -113,8 +117,8 @@ if dispMode == 1
 	disp('________________________________________')
 	disp(' ');
 	disp([ ' Numele fisierului      ',nume]);
-	disp([' Unghi de masura, radiani ' num2str(teta)]);
-	disp([' Unghi de masura, grade ',num2str((180/pi)*teta)]);
+	disp([' Unghi de masura, radiani ' num2str(theta)]);
+	disp([' Unghi de masura, grade ',num2str((180/pi)*theta)]);
 	disp([' a0 start                ',num2str(a0start)]);
 	disp([' a0 min                  ',num2str(a0min)]);
 	disp([' a0 max                  ',num2str(a0max)]);
