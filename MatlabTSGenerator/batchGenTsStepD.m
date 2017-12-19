@@ -49,7 +49,7 @@ for dd=dMin:dStep:dMax
     d(i)=dd;
     [t,x(:,i),a0(i,1),a1(i,1)]=gents37(tsName, d(i), theta, lambda, indref, eta, tcelsius, fs, nt, 0);
     deltaT=toc;
-    timeLeft=(nSteps-i)*deltaT;
+    timeLeft=(nSteps-i+1)*deltaT;
     [h, m, s] = sec2time(timeLeft);
     disp(['[+++] Step: ' num2str(i) ' 	out of ' num2str(nSteps) ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
 end
