@@ -1,5 +1,5 @@
 function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1min,a1max]= ... 
-    initConst(thetagrade, tcelsius, solvent)
+    initConst(thetagrade, tcelsius, diam, lambda, solvent)
 %-------------------------------------------------------------------------------
 % Version 20171119, Silviu Rei based on initconst4 by Dan Chicea
 % function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1min,a1max]= initConst(thetagrade, tcelsius, solvent)
@@ -10,6 +10,8 @@ function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1mi
 %       thetagrade  = measuring angle in degrees
 %       tcelsius    = temperature in celsius
 %       solvent     = 'air' for air, 'water' for water
+%       lambda      = wavelength of the laser light
+%       diam        = particle size in nm
 %	Output:
 %		indref      = refractive index of the solvent
 %       lambda      = wavelength of the laser light
@@ -23,17 +25,17 @@ function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1mi
 %		initConst(90, 20, 'water');
 %-------------------------------------------------------------------------------
 if strcmp(solvent,'air')
-    indref=1.0003;%air
+    indref=air_indref(lambda,tcelsius,101.325,50,'edlen',1000);%indref=1.0003;%air@20C
     eta=air_viscosity(tcelsius); %air
 end
 if strcmp(solvent,'water')
-    indref=1.333;%water
+    indref = water_indref(tcelsius, 1000, lambda);%indref=1.333;%water@20C
     eta=water_viscosity(tcelsius);  %water
 end
     
-lambda=633;
+%lambda=633;
 theta=thetagrade*pi/180;
-diam=5;
+%diam=5;
 
 a0start=10;
 a0min=1.e-5;

@@ -51,7 +51,7 @@ for dd=dMin:dStep:dMax
     deltaT=toc;
     timeLeft=(nSteps-i+1)*deltaT;
     [h, m, s] = sec2time(timeLeft);
-    disp(['[+++] Step: ' num2str(i) ' 	out of ' num2str(nSteps) ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+    disp(['[+++] Step: ' num2str(i) ' out of ' num2str(nSteps+1) ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
 end
 %
 %rez=[d',a0,a1]; %le aduna intr-o matrice pt verificare cu fitare
@@ -65,7 +65,7 @@ if optsav >= 1 % vrea scris fisierul psd pe disc
         '-tcelsius-',num2str(tcelsius),...
         '-fs-',num2str(fs),...
         '-nt-',num2str(nt),...
-        '_ts.ext'],'x','-ascii');
+        '_ts.txt'],'x','-ascii');
     save([tsName,'-d-',num2str(dMin),'-',num2str(dStep),'-',num2str(dMax), ...
         '-theta-',num2str(theta), ...
         '-lambda-',num2str(lambda),...
@@ -96,7 +96,7 @@ if optsav >= 1 % vrea scris fisierul psd pe disc
 end
 t2=etime(clock,t1);
 [h, m, s] = sec2time(t2);
-disp(['[+++] Total Execution Time for ' int2str(nSteps) ' diameters is: ' num2str(h) 'h:' num2str(m) 'm:' num2str(s) 's'])
+disp(['[+++] Total Execution Time for ' int2str(nSteps+1) ' diameters is: ' num2str(h) 'h:' num2str(m) 'm:' num2str(s) 's'])
 %
 
 
