@@ -51,7 +51,7 @@ for tcelsiusTemp=tcelsiusMin:tcelsiusStep:tcelsiusMax
     deltaT=toc;
     timeLeft=(nSteps-i+1)*deltaT;
     [h, m, s] = sec2time(timeLeft);
-    disp(['[+++] Step: ' num2str(i) ' 	out of ' num2str(nSteps) ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+    disp(['[+++] Step: ' num2str(i) ' 	out of ' num2str(nSteps+1) ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
 end
 if optsav >= 1 % vrea scris fisierul psd pe disc
     save([tsName,'-d-',num2str(diam),...

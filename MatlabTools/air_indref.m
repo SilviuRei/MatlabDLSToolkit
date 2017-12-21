@@ -1,8 +1,9 @@
 function nr = air_indref(wavelength,temperature,pressure,humidity,method,xCO2)
+%-------------------------------------------------------------------------------
+% Version 20171120, Silviu Rei
 % function nr = air_indref(wavelength,temperature,pressure,humidity,method,xCO2)
-% AIR_INDEX Computes real index of refraction of air given
+% Computes real index of refraction of air given
 % wavelength, temperature, pressure, humidity and CO2 concentration
-
 % Real index of refraction is computed using the algorithms
 % available at http://emtoolbox.nist.gov/Main/Main.asp
 % Two methods can be specified: 'Ciddor' (newer)

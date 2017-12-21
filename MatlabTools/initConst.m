@@ -1,8 +1,7 @@
-function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1min,a1max]= ... 
-    initConst(thetagrade, tcelsius, diam, lambda, solvent)
+function [dMin,dMax,dStep,indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,a0max,a1start,a1min,a1max,fs,nt,nnHidden,autocorrLags,trainNNFlag,deltaFit]=initConst(dMin,dStep,dMax,thetagrade,tcelsius,pSize,lambda,solvent,fs,nt, nnHidden,autocorrLags,trainNNFlag,deltaFit)
 %-------------------------------------------------------------------------------
-% Version 20171119, Silviu Rei based on initconst4 by Dan Chicea
-% function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1min,a1max]= initConst(thetagrade, tcelsius, solvent)
+% Version 20171120, Silviu Rei based on initconst4 by Dan Chicea
+% function [indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,a0max,a1start,a1min,a1max,fs,nt]=initConst(thetagrade,tcelsius,pSize,lambda,solvent,fs,nt)
 % 
 %   The function initializes the physical constants to be used
 %   with DLS time series generator
@@ -11,7 +10,11 @@ function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1mi
 %       tcelsius    = temperature in celsius
 %       solvent     = 'air' for air, 'water' for water
 %       lambda      = wavelength of the laser light
-%       diam        = particle size in nm
+%       pSize       = particle size in nm
+%       fs          = acquisition frequency
+%       nt          = number of samples in the series
+%       nnHidden    = number of neurons in the hidden layer
+%       autocorrLags= number of lags in the autocorrelation function
 %	Output:
 %		indref      = refractive index of the solvent
 %       lambda      = wavelength of the laser light
@@ -20,9 +23,12 @@ function [indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1mi
 %       theta       = measuring angle in radian
 %       diam        = particle size in nm
 %       a0,a1       = DLS fit parameters
+%       fs          = acquisition frequency
+%       nt          = number of samples in the series
+%       nnHidden    = number of neurons in the hidden layer
+%       autocorrLags= number of lags in the autocorrelation function
 %	Example:
-%		[indref,lambda,eta,tcelsius,theta,diam,a0start,a0min,a0max,a1start,a1min,a1max]=
-%		initConst(90, 20, 'water');
+%       [indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,a0max,a1start,a1min,a1max,frequency,nt,nnHidden,autocorrLags]=initConst(90,20,5,633,'water',16000,32768,150,100)
 %-------------------------------------------------------------------------------
 if strcmp(solvent,'air')
     indref=air_indref(lambda,tcelsius,101.325,50,'edlen',1000);%indref=1.0003;%air@20C
@@ -33,9 +39,7 @@ if strcmp(solvent,'water')
     eta=water_viscosity(tcelsius);  %water
 end
     
-%lambda=633;
 theta=thetagrade*pi/180;
-%diam=5;
 
 a0start=10;
 a0min=1.e-5;

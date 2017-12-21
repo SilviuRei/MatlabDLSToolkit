@@ -1,4 +1,4 @@
-function [deltaT, net] = nnDlsTrain(x, t, n)
+function [deltaT, net] = nnDlsTrain(acf, d, nnHidden)
 %------------------------------------------------------------
 % Version 20171030, Silviu Rei
 % Solve an Input-Output Fitting problem with a Neural Network
@@ -8,12 +8,12 @@ function [deltaT, net] = nnDlsTrain(x, t, n)
 %
 % function [deltaT, net] = nnDlsTrain(x, t, n)
 % Inputs:
-%	x = input training vector
-%	t = target vector
-%	n = number of neurons in the hidden layer
+%	acf             = input training vector
+%	d               = target vector
+%	nnHidden        = number of neurons in the hidden layer
 % Outputs:
-%	deltaT = training time in seconds
-%	net = matlab neural network object
+%	deltaT          = training time in seconds
+%	net             = matlab neural network object
 %------------------------------------------------------------
 
 t0 = clock;
@@ -29,12 +29,14 @@ mkdir('nn_dls/nn_dls_data');
 % 'trainlm' is usually fastest.
 % 'trainbr' takes longer but may be better for challenging problems.
 % 'trainscg' uses less memory. Suitable in low memory situations.
-trainFcn = 'trainscg'; %trainFcn = 'traincgf';
+%trainFcn = 'trainscg';
+trainFcn = 'traincgf';
 
 % Create a Fitting Network
-hiddenLayerSize = n;
+hiddenLayerSize = nnHidden;
 net = fitnet(hiddenLayerSize,trainFcn);
-net.trainParam.showWindow = 0;
+%net.trainParam.showWindow = 0;%uncoment to hide training window
+net.trainParam.showWindow = 1;%uncomment to show training window
 
 % Setup Division of Data for Training, Validation, Testing
 net.divideParam.trainRatio = 70/100;
@@ -46,12 +48,12 @@ net.inputs{1}.processFcns = {};
 net.outputs{2}.processFcns = {};
 
 % Train the Network
-[net,tr] = train(net,x,t);
+[net,tr] = train(net,acf,d);
 
 % Test the Network
-y = net(x);
-e = gsubtract(t,y);
-performance = perform(net,t,y);
+y = net(acf);
+e = gsubtract(d,y);
+performance = perform(net,d,y);
 
 % View the Network
 %view(net)
@@ -65,8 +67,8 @@ performance = perform(net,t,y);
 %h = figure, ploterrhist(e)
 %saveas(h, 'nn_dls/nn_dls_figs/nn_dls_errhist.png');
 %h = figure, plotregression(t,y);
-h = plotregression(t,y);
-saveas(h, ['nn_dls/nn_dls_figs/nn_dls_regression' num2str(n) '.png']);
+h = plotregression(d,y);
+saveas(h, ['nn_dls/nn_dls_figs/nn_dls_regression' num2str(nnHidden) '.png']);
 
 %h = figure, plotfit(net,x,t)
 %saveas(h, 'nn_dls/nn_dls_figs/nn_dls_fit.png');

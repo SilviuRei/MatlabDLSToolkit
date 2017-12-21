@@ -1,4 +1,6 @@
 function n = water_indref(temperature,density,wavelength)
+%-------------------------------------------------------------------------------
+% Version 20171120, Silviu Rei
 % function n = water_indref(temperature,density,wavelength)
 % WATER_INDEX Compute the index of refraction using the 1997 release of
 %   the IAPWS available on http://www.iapws.org

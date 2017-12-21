@@ -1,7 +1,7 @@
-function [t,x,a0,a1]=batchGenTsStepD(tsName,dMin,dStep,dMax,theta,lambda,indref,eta,tcelsius,fs,nt,optsav);
+function [t,x,a0,a1]=batchGenTsStepSize(tsName,dMin,dStep,dMax,theta,lambda,indref,eta,tcelsius,fs,nt,optsav);
 %-------------------------------------------------------------------------------
 % Version 20171119, Silviu Rei based on load_ts36 by Dan Chicea
-% [t,x,a0,a1]=batchGenTsStepD(tsName,dMin,dStep,dMax,theta,lambda,indref,eta,tcelsius,fs,nt,optsav);
+% [t,x,a0,a1]=batchGenTsStepDSize(tsName,dMin,dStep,dMax,theta,lambda,indref,eta,tcelsius,fs,nt,optsav);
 % 
 %   The function generates time series for DLS for various sizes, within
 %   the defined range.
@@ -21,10 +21,10 @@ function [t,x,a0,a1]=batchGenTsStepD(tsName,dMin,dStep,dMax,theta,lambda,indref,
 %       optsav      = if 1 save the time series in separate files for a0,a1,ts
 %	Output:
 %       t           = time axis of the time series
-%       x           = time series
+%       m           = time series
 %       a0, a1      = Lorentz parameters       
 %	Example:
-%		[t,x,a0,a1]=batchGenTsStepD('test',5,5,30,theta,lambda,indref,eta,tcelsius,100,200,1);
+%		[t,x,a0,a1]=batchGenTsStepDSize('test',5,5,30,theta,lambda,indref,eta,tcelsius,100,200,1);
 %-------------------------------------------------------------------------------
 % Original Comment of Dan Chicea
 % functia incarca matricea cu serii temporale, cate o serie pe cate o
