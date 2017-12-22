@@ -24,7 +24,7 @@ pas=1;
 teta=pi/2;
 indref=1.33;%water
 %indref=1.003;%air@20C
-lambda=633.e-9;
+lambda=633;
 tcelsius=20;
 eta=water_viscosity(tcelsius);%water
 %eta=1.8369247E-5;%air@20C
@@ -35,7 +35,7 @@ a1start=10;
 a1min=0.001;
 a1max=9000;
 control=2;
-tip='fig';
+tip='png';
 text2='';
 text1=name;
 t0 = clock;
@@ -43,7 +43,7 @@ t0 = clock;
 for i=index1:index2
     tic;
     namefile = [name  num2str(i)];
-	disp('[+]------------');
+    disp('[+]------------');
     disp(['[+] Loading file ' namefile]);
     %ts = load(namefile);
     %ts = fltr(ts, 16000, 1, 50, 1);
@@ -57,7 +57,7 @@ for i=index1:index2
     disp(['        [-] Diameter = ' num2str(d(i)) ' nanometers']);
     deltat = toc;
     [h,m,s] = sec2time(deltat*(index2-i));
-    disp(['[+] Time left=' num2str(h) ':' num2str(m) ':' num2str(s)]);
+    disp(['[+] Time left=' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
     if cleanMode == 1
         delete('*.fps');
         delete('*.rez');

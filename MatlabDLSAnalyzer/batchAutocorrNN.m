@@ -34,7 +34,7 @@ for i=index1:index2
     disp(['        [-] Diameter = ' num2str(d(i)) ' nanometers']);
     deltat = toc;
     [h, m, s] = sec2time(deltat*(index2-i));
-    disp(['[+] Time left=' num2str(h) ':' num2str(m) ':' num2str(s)]);
+    disp(['[+] Time left=' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
 end
 t1=clock;
 deltaT = etime(t1,t0);

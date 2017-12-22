@@ -42,17 +42,17 @@ function [roF] = batchDLSRollOffFrequencySize (a0,a1,startSize,endSize,stepSize,
 
     end
     
-    figure(5);
+    figure(50);
     plot(dn,a0n);
     title('Lorentz Parameter a0');
     xlabel('Particle Size (nm)');
     ylabel('a0');
-    figure(6);
+    figure(51);
     plot(dn,a1n);
     title('Lorentz Parameter a1');
     xlabel('Partice Size (nm)');
     ylabel('a1');
-    figure(7);
+    figure(52);
     plot(dn,roF);
     title('Roll-off Frequency');
     xlabel('Particle Size (nm)');
@@ -80,8 +80,8 @@ function [roF] = batchDLSRollOffFrequencySize (a0,a1,startSize,endSize,stepSize,
         'eta-' num2str(eta) '-'... 
         '_f-' num2str(fs)];
 
-    saveas(5,figureNameA0,figType);
-    saveas(6,figureNameA1,figType);
-    saveas(7,figureNameRoF,figType);
+    saveas(50,figureNameA0,figType);
+    saveas(51,figureNameA1,figType);
+    saveas(52,figureNameRoF,figType);
     
     save([figureNameRoF '.txt'],'roF','-ascii');

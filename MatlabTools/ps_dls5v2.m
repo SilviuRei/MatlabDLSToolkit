@@ -19,7 +19,7 @@ function [buf1]=ps_dls5(nume,frecv,nr1,nr2,tip,opt, dispMode)
 %   Fata de versiunea 4 nu pune in fisierul de iesire primele nr1 si
 %   ultumele nr2 perechi de valori
 %
-numefis=[nume,'.','ext'];
+numefis=[nume '.ext'];
 a=load(numefis);
 [m,m1]=size(a);
 if dispMode == 1
