@@ -56,7 +56,7 @@ hold off;
 if dispMode == 1
     figure(figureNumber2);
 elseif dispMode == 0
-    figureNumber1 = figure('visible', 'off');
+    figureNumber2 = figure('visible', 'off');
 end
 
 plot(flog,slog,'b');

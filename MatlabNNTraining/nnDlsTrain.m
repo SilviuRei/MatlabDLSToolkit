@@ -1,4 +1,4 @@
-function [deltaT, net] = nnDlsTrain(acf, d, nnHidden)
+function [deltaT, net] = nnDlsTrain(acf, d, nnHidden, trainFcn)
 %------------------------------------------------------------
 % Version 20171030, Silviu Rei
 % Solve an Input-Output Fitting problem with a Neural Network
@@ -15,7 +15,11 @@ function [deltaT, net] = nnDlsTrain(acf, d, nnHidden)
 %	deltaT          = training time in seconds
 %	net             = matlab neural network object
 %------------------------------------------------------------
-
+warning off;
+disp('---------------------------------------------------------------------');
+disp('[+++] Starting Neural Network Training');
+disp(['   [+] Parameters: Hidden Layer Size:' num2str(nnHidden) ', Training Function:'...
+        trainFcn]);
 t0 = clock;
 
 % Create directories for saving the files
@@ -30,7 +34,7 @@ mkdir('nn_dls/nn_dls_data');
 % 'trainbr' takes longer but may be better for challenging problems.
 % 'trainscg' uses less memory. Suitable in low memory situations.
 %trainFcn = 'trainscg';
-trainFcn = 'traincgf';
+%trainFcn = 'traincgf';
 
 % Create a Fitting Network
 hiddenLayerSize = nnHidden;
@@ -49,6 +53,7 @@ net.outputs{2}.processFcns = {};
 
 % Train the Network
 [net,tr] = train(net,acf,d);
+disp('   [+] Neural Network Training Complete');
 
 % Test the Network
 y = net(acf);
@@ -66,9 +71,13 @@ performance = perform(net,d,y);
 %saveas(h, 'nn_dls/nn_dls_figs/nn_dls_trainstate.png');
 %h = figure, ploterrhist(e)
 %saveas(h, 'nn_dls/nn_dls_figs/nn_dls_errhist.png');
-%h = figure, plotregression(t,y);
-h = plotregression(d,y);
-saveas(h, ['nn_dls/nn_dls_figs/nn_dls_regression' num2str(nnHidden) '.png']);
+%h = figure, plotregression(d,y);
+%h = plotregression(d,y);
+%disp(['   [+] Saving File nn_dls/nn_dls_figs/nn_dls_regression-' num2str(nnHidden) ...
+%        '-' trainFcn '.png']);
+%saveas(h, ['nn_dls/nn_dls_figs/nn_dls_regression-' num2str(nnHidden) ...
+%        '-' trainFcn '.png']);
+
 
 %h = figure, plotfit(net,x,t)
 %saveas(h, 'nn_dls/nn_dls_figs/nn_dls_fit.png');
@@ -76,7 +85,9 @@ saveas(h, ['nn_dls/nn_dls_figs/nn_dls_regression' num2str(nnHidden) '.png']);
 %save('nn_dls/nn_dls_workspace/DLS_NN.mat');
 
 % Generate nn function - Matlab
+disp('   [+] Generating Neural Network: nn_dls');
 genFunction(net,'nn_dls','MatrixOnly','yes', 'ShowLinks','no');
+disp('   [+] Neural Network Generated');
 
 % Export NN weights and biases
 wb = formwb(net, net.b, net.iw, net.lw);
@@ -85,10 +96,19 @@ w1 = iw{1,1};
 w2 = lw{2,1};
 b1 = b{1,1};
 b2 = b{2,1};
+
 csvwrite('nn_dls/nn_dls_data/w1.csv',w1);
+disp('   [+] File Saved: nn_dls/nn_dls_data/w1.csv');
+
 csvwrite('nn_dls/nn_dls_data/w2.csv',w2);
+disp('   [+] File Saved: nn_dls/nn_dls_data/w2.csv');
+
 csvwrite('nn_dls/nn_dls_data/b1.csv',b1);
+disp('   [+] File Saved: nn_dls/nn_dls_data/b1.csv');
+
 csvwrite('nn_dls/nn_dls_data/b2.csv',b2);
+disp('   [+] File Saved: nn_dls/nn_dls_data/b2.csv');
+
 %save('nn_dls/nn_dls_data/w1.txt','w1','-ascii');
 %save('nn_dls/nn_dls_data/w2.txt','w2','-ascii');
 %save('nn_dls/nn_dls_data/b1.txt','b1','-ascii');
@@ -96,4 +116,6 @@ csvwrite('nn_dls/nn_dls_data/b2.csv',b2);
 t1 = clock;
 deltaT = etime(t1,t0);
 [h, m, s] = sec2time(deltaT);
+disp('[+++] Neural Network Training Complete');
 disp(['[+++] Total Duration of Training DLS NN = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+warning on;

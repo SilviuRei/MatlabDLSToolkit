@@ -37,7 +37,7 @@ for i=1:maxLoop
         cd(dirName);
     
            
-        [t,mTS,a0,a1]=batchGenTsStepSize(nightTitle,dMin,dStep,dMax,theta,lambda,...
+        [t,mTS,a0,a1]=batchGenTsStepSize(dirName,dMin,dStep,dMax,theta,lambda,...
             indref,eta,tcelsius,fs,nt,1);
     
         [dFitDLS,a0FitDLS,a1FitDLS,roF] = batchDLSFindA0A1RollOffFrequencySize ...
@@ -46,11 +46,11 @@ for i=1:maxLoop
             a0start, a0min, a0max, a1start, a1min, a1max, 20, 'png', 0, 1);
     
         [dFitNN, acf,lags,deltaT] = dlsAutocorrNNTrainAndFitMem(mTS,dMin, ...
-            dMax,dStep,1,(dMax-dMin)/dStep+1,1,autocorrLags,fs,0,1,nnHidden);
+            dMax,dStep,1,(dMax-dMin)/dStep+1,1,autocorrLags,fs,0,1,nnHidden, 'traincgf');
         
         d=dMin:dStep:dMax;
     
-        [errelFitDLS,errelFitNN,errabsFitDLS,errabsFitNN]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png');
+        [errelFitDLS,errelFitNN,errabsFitDLS,errabsFitNN]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png',1);
         
         [dclassical, dnn, durationClassical, durationNN, hisq, erabs, ...
             errel, toptimization] = batchDLSFitVsAutocorrNN (nightValidationTS,1,30,autocorrLags,fs,0,1);

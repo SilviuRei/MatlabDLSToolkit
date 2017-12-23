@@ -1,4 +1,4 @@
-function [acf,lags]=analizor_autocor2(nume,x,steps,fs,extgr,indsave)
+function [acf,lags]=analizor_autocor2(name,x,steps,fs,extgr,indsave,dispMode)
 %
 %   Functia citeste in vectorul x fisierul nume.ext_fis; nume este fara extensie,
 % de tipul 'proba'. Fisierul trebuie sa contina o coloana de numere.
@@ -19,26 +19,29 @@ function [acf,lags]=analizor_autocor2(nume,x,steps,fs,extgr,indsave)
 %   Aceasta versiune este pt a functiona in batch mode apelata din
 %   load_acr1
 %
-%disp(['   Analizez fisierul: ',numefisier])
-%disp(['   Fr. esantionare:   ',num2str(fs)]); 
-%detaliu=[num2str(steps)];
-%disp(['   Numar de pasi: ',detaliu]);
+if dispMode == 1
+    disp(['[+++]Analyzing time series: ' name])
+    disp(['   [+] Sampling Frequency: ' num2str(fs) 'Hz']); 
+    disp(['   [+] Number of Steps: ',num2str(steps)]);
+end
 %x=load(numefisier,'-ascii');   %incarca fisierul
 %xmed=mean(x);
 %x=x-xmed;
 %
+figNumber = 80;
 [acf, lags, bounds]=autocorr(x, steps, [], 2);     %transformata bruta
 dt=1/fs;        %intervalul dintre doua valori
 lags=lags*dt;
 %
 % calculam abscisa, adica la ce frecvente gasim acel spectru
 %
-if indsave >=1
-    fid1 = fopen([nume,'.acr',],'w');
+if indsave ==1
+    fid1 = fopen([name,'.acr',],'w');
     for k=1:steps+1
         fprintf(fid1, '%11.5g %11.5g \n', lags(k), acf(k));
     end %k
     fclose(fid1);
+    disp(['   [+] Saving File ' name '.acr']);
     % calculeaza si timpul de autocorelatie
     k=1;
     e=exp(1);
@@ -46,17 +49,24 @@ if indsave >=1
         tcor=lags(k);
         k=k+1;
     end
-    disp([nume,' timp de corelatie: ',num2str(tcor),' +/- ',num2str(dt),' secunde']); 
+    if dispMode == 1
+        disp([name,' Correlation time: ',num2str(tcor),' +/- ',num2str(dt),' s']); 
+    end
 end %if
 %
-if indsave >= 2
-    figure(1)
+if indsave == 2
+    if dispMode == 1
+        figure(figNumber);
+    elseif dispMode == 0
+        figNumber = figure('visible','off');
+    end
     plot(lags, acf,'.k');
     grid on
-    title(['   Autocorrelation function for sample: ',nume,]);
+    title(['   Autocorrelation function for sample: ',name,]);
     xlabel('t, s');
     ylabel('a.u.');
     xmax=max(lags);
     axis([0, xmax, -0.2, 1]);
-    saveas(1, [nume,'-accr'],extgr);
+    saveas(figNumber, [name,'-accr'],extgr);
+    disp(['   [+] Saving File ' name '-accr.' extgr]);
 end %if

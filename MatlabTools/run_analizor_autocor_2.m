@@ -1,4 +1,4 @@
-function [acf,tlags]=run_analizor_autocor_2(nume,x,steps,fs,extgr,indsave,i1,i2)
+function [acf,tlags]=run_analizor_autocor_2(tsName,x,steps,fs,extgr,indsave,bS,eS,sS,i1,i2,istep,dispMode)
 %
 % functie pt a calcula f de autocorelatie pt un grup de serii din matricea
 % cu seriile temporale
@@ -16,10 +16,37 @@ function [acf,tlags]=run_analizor_autocor_2(nume,x,steps,fs,extgr,indsave,i1,i2)
 %    seriile temporale:
 %   [acf,lags]=run_analizor_autocor_2('acft17',at17_1_3000,1000,16000,'jpg',0,10,20);
 %
-k=0;    % coloana 1 va corespunde primei serii temporale din selectie
-for i=i1:i2
+disp('---------------------------------------------------------------------');
+disp('[+++] Autocorrelation Computing - Time Series Matrix');
+disp(['   [+] Using ' tsName]);
+h=999;
+m=999;
+s=999;
+k=1;    % coloana 1 va corespunde primei serii temporale din selectie
+numSteps = (i2-i1)/istep+1;
+waitbarHandle = waitbar(0,['Computing Autocorrelation...' ...
+        newline 'Step:'  ...
+        newline 'Time Left =' ...
+        newline 'Progress: 0%']);
+dM = bS:sS:eS;
+for i=i1:istep:i2
+    tic
+    disp(['[+++] Step ' num2str(k) ' out of ' num2str(numSteps)...
+            ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+        waitbar((k-1)/numSteps, waitbarHandle,['Autocorrelation Computing...' ...
+            newline 'Step: ' num2str(k) ' out of ' num2str(numSteps)  ...
+            newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
+            newline 'Progress: ' num2str(100*(k-1)/numSteps) ' %']);
+    seriesName = [tsName '-' num2str(dM(i))];
+    [acf(:,k),lags]=analizor_autocor2(seriesName,x(:,i),steps,fs,extgr,indsave,dispMode);
+    deltat = toc;
+    timeLeft = deltat*(numSteps-k);
+    [h, m, s] = sec2time(timeLeft);
     k=k+1;
-    [acf(:,k),lags]=analizor_autocor2(nume,x(:,i),steps,fs,extgr,indsave);
 end
+close(waitbarHandle);
 tlags=lags./fs;     % tlags reprezinta timpul (abscisa functiei de autocorelatie)
 % that's all
+save([tsName '_acf.txt'],'acf','-ascii');
+disp(['   [+] File Saved: ' tsName '_acf.txt']);
+disp('[+++] Autocorrelation Computing Complete');

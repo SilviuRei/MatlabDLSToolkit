@@ -102,7 +102,7 @@ set(handles.h_NNFitFilename, 'String', '');
 set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
 set(handles.h_ErrNNDLSDisplay, 'Value', 2);
-set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
+set(handles.h_ErrNNDLSStatus, 'String', '');
  
 
 % UIWAIT makes DLSTool wait for user response (see UIRESUME)
@@ -579,7 +579,7 @@ default_autocorrlags     = 999;
  set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
  set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
  set(handles.h_ErrNNDLSDisplay, 'Value', 2);
- set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
+set(handles.h_ErrNNDLSStatus, 'String', '');
  
 
 % --- Executes on button press in pushbutton2.
@@ -757,7 +757,7 @@ set(handles.h_NNFitFilename, 'String', '');
 set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
 set(handles.h_ErrNNDLSDisplay, 'Value', 2);
-set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
+set(handles.h_ErrNNDLSStatus, 'String', '');
  
 
 
@@ -1379,7 +1379,7 @@ if dispMode == 2
 end
 d=dMin:dStep:dMax;
     
-[~,~,~,~]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png',dispMode);
+[~,~,~,~]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png');
 
 cd(currentPath);
 msgbox('NN & DLS Error Evaluation Complete');
@@ -1414,7 +1414,7 @@ function h_ErrNNDLSBrowseFilenameDLS_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 [FileName,FilePath ]= uigetfile('*.*','Select DLS Sizes File');
 ExPath = fullfile(FilePath, FileName);
-set(handles.h_ErrNNDLSStatus, 'String', 'Status: DLS File Selected');
+set(handles.h_ErrNNDLSStatus, 'String', 'Status: DLS Sizes File Selected');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', ExPath);
 
 
@@ -1425,5 +1425,5 @@ function h_ErrNNDLSBrowseFilenameNN_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 [FileName,FilePath ]= uigetfile('*.*','Select DLS Sizes File');
 ExPath = fullfile(FilePath, FileName);
-set(handles.h_ErrNNDLSStatus, 'String', 'Status: NN File Selected');
+set(handles.h_ErrNNDLSStatus, 'String', 'Status: NN Sizes File Selected');
 set(handles.h_ErrNNDLSFilenameNN, 'String', ExPath);
