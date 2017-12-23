@@ -43,6 +43,11 @@ x=zeros(nt,nSteps);
 a0=zeros(nSteps,1);
 a1=zeros(nSteps,1);
 i=0;
+waitbarHandle = waitbar(0,['Generating Time Series...' ...
+        newline 'Step: ' num2str(i) ' out of ' num2str(nSteps+1)  ...
+        newline 'Time Left = ??h ??m ??s' ...
+        newline 'Progress: 0%']);
+%set(waitbarHandle, 'WindowStyle','modal');
 for dd=dMin:dStep:dMax
     tic
     i=i+1;
@@ -51,8 +56,14 @@ for dd=dMin:dStep:dMax
     deltaT=toc;
     timeLeft=(nSteps-i+1)*deltaT;
     [h, m, s] = sec2time(timeLeft);
-    disp(['[+++] Step: ' num2str(i) ' out of ' num2str(nSteps+1) ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+    disp(['[+++] Step: ' num2str(i) ' out of ' num2str(nSteps+1)  ...
+        ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+    waitbar(dd/dMax, waitbarHandle,['Generating Time Series...' ...
+        newline 'Step: ' num2str(i) ' out of ' num2str(nSteps+1)  ...
+        newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
+        newline 'Progress: ' num2str(100*dd/dMax) ' %']);
 end
+close(waitbarHandle);
 %
 %rez=[d',a0,a1]; %le aduna intr-o matrice pt verificare cu fitare
 %

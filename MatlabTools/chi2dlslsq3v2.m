@@ -28,7 +28,7 @@ function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3v2(nume,theta,indref,lambda,tc
 %
 
 lambda=1.e-9*lambda;
-
+figureNumber = 10;
 if dispMode == 1
 	disp('___________________________________');
 	%disp(' ');
@@ -77,7 +77,11 @@ pscalc=florentz2(arg,f);
 chi2min=(1/n)*sum((psexp-pscalc).^2);
 %
 if control >=1  %vrea afisat pe ecran
-    figure(10);
+    if dispMode == 1
+        figure(10);
+    elseif dispMode == 0
+        figureNumber = figure('visible', 'off');
+    end
     loglog(f, psexp,'ob',f,pscalc,'-r',...
                         'LineWidth',2)
     title(['Power Spectrum Lorentz Fit', newline, ...
@@ -89,7 +93,7 @@ end
 if control >= 2 %vrea figura salvata pe disc
     format('long');
     numeg=['chi2dlssq-d-', nume,'-a0-',num2str(a0),'-a1-',num2str(a1)];
-    saveas(10,[numeg,'.',tip],tip);
+    saveas(figureNumber,[numeg,'.',tip],tip);
 end
 %
 % salveaza datele ca matrice, f, psexp, pscalc

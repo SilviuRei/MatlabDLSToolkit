@@ -35,6 +35,13 @@ disp('[++] Fit DLS Batch Mode - Size Variant');
 control=2;
 tip='png';
 t0 = clock;
+i=1;
+nSteps=(index2-index1)/istep+1;
+waitbarHandle = waitbar(0,['DLS Fit...' ...
+        newline 'Step: ' num2str(i) ' out of ' num2str(nSteps)  ...
+        newline 'Time Left = ??h ??m ??s' ...
+        newline 'Progress: 0%']);
+%set(waitbarHandle, 'WindowStyle','modal');
 for i=index1:istep:index2
     tic;
     namef = [num2str(din(i)) '.ext'];
@@ -48,7 +55,7 @@ for i=index1:istep:index2
         '-theta-',num2str(theta),'-lambda-',num2str(lambda),...
         '-indref-',num2str(indref),'-eta-',num2str(eta),...
         '-tcelsius-',num2str(tcelsius)];
-	plotTs(namePlotTs, temp, timeScale, 'png');
+	plotTs(namePlotTs, temp, timeScale, 'png',dispMode);
     %ts = load(namefile);
     %ts = fltr(ts, 16000, 1, 50, 1);
     disp('[+] Calculating Power Spectrum');
@@ -63,6 +70,10 @@ for i=index1:istep:index2
     timeLeft = deltat*(index2-i);
     [h, m, s] = sec2time(timeLeft);
     disp(['[+++] Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+    waitbar(i/index2, waitbarHandle,['DLS Fit...' ...
+        newline 'Step: ' num2str(i) ' out of ' num2str(nSteps)  ...
+        newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
+        newline 'Progress: ' num2str(100*i/index2) ' %']);
     %disp(['[+] Time left=' num2str(deltat*(index2-i)) ' seconds']);
     if cleanMode == 1    
         delete('*.ext');
@@ -70,7 +81,7 @@ for i=index1:istep:index2
         delete('*.rez');
     end
 end
-
+close(waitbarHandle);
 t1=clock;
 deltaT = etime(t1,t0);
 [h, m, s] = sec2time(deltaT);

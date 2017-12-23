@@ -24,10 +24,18 @@ function [roF] = batchDLSRollOffFrequencySize (a0,a1,startSize,endSize,stepSize,
 %	Example:
 %		[roF] = batchDLSRollOffFrequencySize (a0,a1,5,30,5,lambda,tcelsius,theta,indref,eta,16000, 20, 'png', 1);
 %-------------------------------------------------------------------------------
+    figureNumber1 = 50;
+    figureNumber2 = 51;
+    figureNumber3 = 53;
     deltaInterval = endSize - startSize;
     maxDeltaInterval = deltaInterval/stepSize+1;
     dn=startSize:stepSize:endSize;
     t0 = clock;
+    i=1;
+    waitbarHandle = waitbar(0,['DLS Roll-off Frequency Search...' ...
+        newline 'Step: ' num2str(i) ' out of ' num2str(maxDeltaInterval)  ...
+        newline 'Time Left = ??h ??m ??s' ...
+        newline 'Progress: 0%']);
     for i=1:maxDeltaInterval
         tic
         a0n(i)=a0(i);
@@ -38,21 +46,41 @@ function [roF] = batchDLSRollOffFrequencySize (a0,a1,startSize,endSize,stepSize,
         [h, m, s] = sec2time(timeLeft);
         disp(['[+++] Step ' num2str(i) ' out of ' num2str(maxDeltaInterval)...
             ', Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+        waitbar(i/maxDeltaInterval, waitbarHandle,['DLS Roll-off Frequency Search...' ...
+            newline 'Step: ' num2str(i) ' out of ' num2str(maxDeltaInterval)  ...
+            newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
+            newline 'Progress: ' num2str(100*i/maxDeltaInterval) ' %']);
         %disp(['[+] Time left=' num2str(deltat*(index2-i)) ' seconds']);
 
     end
     
-    figure(50);
+    close(waitbarHandle);
+    
+    if dispMode == 1
+        figure(figureNumber1);
+    elseif dispMode == 0
+        figureNumber1 = figure('visible', 'off');
+    end
     plot(dn,a0n);
     title('Lorentz Parameter a0');
     xlabel('Particle Size (nm)');
     ylabel('a0');
-    figure(51);
+    
+    if dispMode == 1
+        figure(figureNumber2);
+    elseif dispMode == 0
+        figureNumber2 = figure('visible', 'off');
+    end
     plot(dn,a1n);
     title('Lorentz Parameter a1');
     xlabel('Partice Size (nm)');
     ylabel('a1');
-    figure(52);
+    
+    if dispMode == 1
+        figure(figureNumber3);
+    elseif dispMode == 0
+        figureNumber3 = figure('visible', 'off');
+    end
     plot(dn,roF);
     title('Roll-off Frequency');
     xlabel('Particle Size (nm)');
@@ -80,8 +108,8 @@ function [roF] = batchDLSRollOffFrequencySize (a0,a1,startSize,endSize,stepSize,
         'eta-' num2str(eta) '-'... 
         '_f-' num2str(fs)];
 
-    saveas(50,figureNameA0,figType);
-    saveas(51,figureNameA1,figType);
-    saveas(52,figureNameRoF,figType);
+    saveas(figureNumber1,figureNameA0,figType);
+    saveas(figureNumber2,figureNameA1,figType);
+    saveas(figureNumber3,figureNameRoF,figType);
     
     save([figureNameRoF '.txt'],'roF','-ascii');

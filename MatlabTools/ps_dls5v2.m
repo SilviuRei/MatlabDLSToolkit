@@ -1,6 +1,6 @@
 function [buf1]=ps_dls5(nume,frecv,nr1,nr2,tip,opt, dispMode)
-%
-%   [2017.12.17] S.Rei - added save of PS figure (fig2)
+%--------------------------------------------------------------------------
+%   [2017.12.22] S.Rei - added save of PS figure (fig2)
 %
 %   ps_dls5(nume,frecv,nr1,nr2,tip,opt)
 %
@@ -20,6 +20,8 @@ function [buf1]=ps_dls5(nume,frecv,nr1,nr2,tip,opt, dispMode)
 %   ultumele nr2 perechi de valori
 %
 numefis=[nume '.ext'];
+figureNumber1=1;
+figureNumber2=2;
 a=load(numefis);
 [m,m1]=size(a);
 if dispMode == 1
@@ -40,14 +42,22 @@ buf1=buf(nr1+1:n-nr2,:);
 %
 if opt>=1
     numefig=['Power Spectrum Logarithmic Scale',newline,'Frequency=',num2str(frecv), ' Hz'];
-    figure(1)
+    if dispMode == 1
+        figure(figureNumber1);
+    elseif dispMode == 0
+        figureNumber1=figure('visible','off');
+    end
     loglog(buf1(:,1),buf1(:,2),'-');
     title(numefig);
     xlabel('f, Hz');
     ylabel('PS');
 %
     numefig=['Power Spectrum',newline,'Frequency=',num2str(frecv), ' Hz'];
-    figure(2)
+    if dispMode == 1
+        figure(figureNumber2);
+    elseif dispMode == 0
+        figureNumber2=figure('visible','off');
+    end
     plot(buf1(:,1),buf1(:,2),'-');
     title(numefig);
     xlabel('f, Hz');
@@ -65,7 +75,7 @@ if opt >= 0
 end
 %
 if opt >=2
-    saveas(1,numefisfig1,tip);
-    saveas(2,numefisfig2,tip);
+    saveas(figureNumber1,numefisfig1,tip);
+    saveas(figureNumber2,numefisfig2,tip);
 end
 %
