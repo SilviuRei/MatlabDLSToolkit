@@ -22,7 +22,7 @@ function varargout = DLSTool(varargin)
 
 % Edit the above text to modify the response to help DLSTool
 
-% Last Modified by GUIDE v2.5 23-Dec-2017 20:57:00
+% Last Modified by GUIDE v2.5 24-Dec-2017 10:38:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,6 +59,8 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+diary on;
+disp('[+++] DLS Tool v1.0 Started');
 set(handles.h_dMin, 'String', '');
 set(handles.h_dMax, 'String', '');
 set(handles.h_dStep, 'String', '');
@@ -89,7 +91,7 @@ set(handles.h_DLSFitRoFDisplay, 'Value', 2);
 set(handles.h_DLSFitRoFFitPoints, 'String', '');
 set(handles.h_DLSFitRoFFilenameA0, 'String', '');
 set(handles.h_DLSFitRoFFilenameA1, 'String', '');
-set(handles.h_comandLogFilename, 'String', '');
+set(handles.h_CommandLogFilename, 'String', '');
 set(handles.h_AutocorrDisplay, 'Value', 2);
 set(handles.h_AutocorrStatus, 'String', 'Status: Ready');
 set(handles.h_AutocorrFilename, 'String', '');
@@ -103,6 +105,17 @@ set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
 set(handles.h_ErrNNDLSDisplay, 'Value', 2);
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
+set(handles.h_ParametersLogFilename, 'String', '');
+ set(handles.h_NightRunGenerateStatus, 'String',        'Ready');
+ set(handles.h_NightRunDLSFitSizeStatus, 'String',      'Ready');
+ set(handles.h_DLSFitRollOffStatus, 'String',           'Ready');
+ set(handles.h_NightRunAutocorrStatus, 'String',        'Ready');
+ set(handles.h_NightRunNNTrainStatus, 'String',         'Ready');
+ set(handles.h_NightRunNNFitStatus, 'String',           'Ready');
+ set(handles.h_NightRunEstimateErrStatus, 'String',     'Ready');
+ set(handles.h_NightRunCommandLogSaveStatus, 'String',  'Ready');
+ set(handles.h_NightRunParamLogSaveStatus, 'String',    'Ready');
+
  
 
 % UIWAIT makes DLSTool wait for user response (see UIRESUME)
@@ -556,7 +569,7 @@ default_autocorrlags     = 999;
  set(handles.h_autocorrLags, 'String', num2str(autocorrLags));
  set(handles.h_solvent, 'Value', default_solvent_nr);
  set(handles.h_generateStatus, 'String', 'Status: Ready');
- set(handles.h_dirName,'String','');
+ set(handles.h_dirName,'String','test');
  set(handles.h_DLSFitStatus, 'String', 'Status: Ready');
  set(handles.h_DLSFitFilename, 'String', '');
  set(handles.h_DLSFitDisplay, 'Value', 2);
@@ -566,7 +579,7 @@ default_autocorrlags     = 999;
  set(handles.h_DLSFitRoFFitPoints, 'String', '20');
  set(handles.h_DLSFitRoFFilenameA0, 'String', '');
  set(handles.h_DLSFitRoFFilenameA1, 'String', '');
- set(handles.h_comandLogFilename, 'String', '');
+ set(handles.h_CommandLogFilename, 'String', 'commandLog.txt');
  set(handles.h_AutocorrDisplay, 'Value', 2);
  set(handles.h_AutocorrStatus, 'String', 'Status: Ready');
  set(handles.h_AutocorrFilename, 'String', '');
@@ -580,6 +593,16 @@ default_autocorrlags     = 999;
  set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
  set(handles.h_ErrNNDLSDisplay, 'Value', 2);
  set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
+ set(handles.h_ParametersLogFilename, 'String', 'parametersLog.txt');
+ set(handles.h_NightRunGenerateStatus, 'String',        'Ready');
+ set(handles.h_NightRunDLSFitSizeStatus, 'String',      'Ready');
+ set(handles.h_DLSFitRollOffStatus, 'String',           'Ready');
+ set(handles.h_NightRunAutocorrStatus, 'String',        'Ready');
+ set(handles.h_NightRunNNTrainStatus, 'String',         'Ready');
+ set(handles.h_NightRunNNFitStatus, 'String',           'Ready');
+ set(handles.h_NightRunEstimateErrStatus, 'String',     'Ready');
+ set(handles.h_NightRunCommandLogSaveStatus, 'String',  'Ready');
+ set(handles.h_NightRunParamLogSaveStatus, 'String',    'Ready');
  
 
 % --- Executes on button press in pushbutton2.
@@ -596,11 +619,198 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton8.
-function pushbutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton8 (see GCBO)
+% --- Executes on button press in h_NightRunStart.
+function h_NightRunStart_Callback(hObject, eventdata, handles)
+% hObject    handle to h_NightRunStart (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+set(handles.h_NightRunGenerateStatus, 'String',        'Ready');
+set(handles.h_NightRunDLSFitSizeStatus, 'String',      'Ready');
+set(handles.h_DLSFitRollOffStatus, 'String',           'Ready');
+set(handles.h_NightRunAutocorrStatus, 'String',        'Ready');
+set(handles.h_NightRunNNTrainStatus, 'String',         'Ready');
+set(handles.h_NightRunNNFitStatus, 'String',           'Ready');
+set(handles.h_NightRunEstimateErrStatus, 'String',     'Ready');
+set(handles.h_NightRunCommandLogSaveStatus, 'String',  'Ready');
+set(handles.h_NightRunParamLogSaveStatus, 'String',    'Ready');
+
+
+indref=str2double(get(handles.h_indref, 'String'));
+eta=str2double(get(handles.h_eta, 'String'));
+fs=str2double(get(handles.h_fs, 'String'));
+nt=str2double(get(handles.h_nt, 'String'));
+dirName=get(handles.h_dirName,'String');
+dMin=str2double(get(handles.h_dMin, 'String'));
+dMax=str2double(get(handles.h_dMax, 'String'));
+dStep=str2double(get(handles.h_dStep, 'String'));
+lambda=str2double(get(handles.h_lambda, 'String'));
+tcelsius=str2double(get(handles.h_tcelsius, 'String'));
+theta=str2double(get(handles.h_theta, 'String'));
+nnHidden=str2double(get(handles.h_nnHidden, 'String'));
+autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
+a0start=str2double(get(handles.h_a0start, 'String'));
+a0min=str2double(get(handles.h_a0min, 'String'));
+a0max=str2double(get(handles.h_a0max, 'String'));
+a1start=str2double(get(handles.h_a1start, 'String'));
+a1min=str2double(get(handles.h_a1min, 'String'));
+a1max=str2double(get(handles.h_a1max, 'String'));
+trainFcnId=get(handles.h_NNTrainFunction, 'Value');
+
+
+dirName = [dirName '_d' num2str(dMin) '-' num2str(dStep) '-' ...
+     num2str(dMax) '-theta-' num2str(theta) '-lambda-' num2str(lambda) ...
+	 '-indref-' num2str(indref) '-eta-' num2str(eta) '-tcelsius-' num2str(tcelsius) ...
+	 '-fs-' num2str(fs) '-nt-' num2str(nt)];
+mkdir(dirName);
+cd(dirName);
+    
+set(handles.h_NightRunGenerateStatus, 'String',        'In Progress');
+[t,mTS,a0,a1]=batchGenTsStepSize(dirName,dMin,dStep,dMax,theta,lambda,...
+     indref,eta,tcelsius,fs,nt,1);
+set(handles.h_NightRunGenerateStatus, 'String',        'Complete');
+
+dispMode=get(handles.h_DLSFitDisplay, 'Value');
+cleanMode=get(handles.h_DLSFitClean, 'Value');
+if dispMode == 2
+    dispMode = 0;
+end
+if cleanMode == 2
+    cleanMode = 0;
+end
+set(handles.h_NightRunDLSFitSizeStatus, 'String',      'In Progress');
+dm=dMin:dStep:dMax;
+[dFitDLS,a0FitDLS,a1FitDLS,~] = batchDLSFitFindA0A1Size(mTS, dm, ...
+    1, (dMax-dMin)/dStep+1, 1, fs, theta, lambda, indref, eta, tcelsius, ...
+    a0start, a0min, a0max, a1start, a1min, a1max, dispMode, cleanMode);
+set(handles.h_NightRunDLSFitSizeStatus, 'String',      'Complete');
+
+dispMode=get(handles.h_DLSFitRoFDisplay, 'Value');
+deltaFit=str2double(get(handles.h_DLSFitRoFFitPoints, 'String'));
+if dispMode == 2
+    dispMode = 0;
+end
+set(handles.h_DLSFitRollOffStatus, 'String',           'In Progress');
+[~] = batchDLSRollOffFrequencySize(a0FitDLS, a1FitDLS, dMin, dMax, dStep, ...
+    lambda,tcelsius,theta,indref,eta,fs,deltaFit,'png', dispMode);
+set(handles.h_DLSFitRollOffStatus, 'String',           'Complete'); 
+
+indsave=2;
+dispMode=get(handles.h_AutocorrDisplay, 'Value');
+if dispMode == 2
+    dispMode = 0;
+end
+set(handles.h_NightRunAutocorrStatus, 'String',        'In Progress');
+[acf,tlags]=run_analizor_autocor_2(dirName,mTS,autocorrLags,fs,'png',indsave,...
+    dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,dispMode);
+set(handles.h_NightRunAutocorrStatus, 'String',        'Complete');
+
+dm = dMin:dStep:dMax;
+switch trainFcnId
+    case 1
+        trainFcn = 'trainlm';
+    case 2
+        trainFcn = 'trainbfg';
+    case 3
+        trainFcn = 'trainrp';
+    case 4
+        trainFcn = 'trainscg';
+    case 5
+        trainFcn = 'traincgb';
+    case 6
+        trainFcn = 'traincgf';
+    case 7
+        trainFcn = 'traincgp';
+    case 8
+        trainFcn = 'trainoss';
+    case 9
+        trainFcn = 'traingdx';
+end
+set(handles.h_NightRunNNTrainStatus, 'String',         'In Progress');
+[~, ~] = nnDlsTrain(acf,dm,nnHidden,trainFcn);
+set(handles.h_NightRunNNTrainStatus, 'String',         'Complete');
+
+dispMode=get(handles.h_NNFitDisplay, 'Value');
+if dispMode == 2
+    dispMode = 0;
+end
+set(handles.h_NightRunNNFitStatus, 'String',           'In Progress');
+[dFitNN] = dlsNNFit (dirName,mTS,dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,autocorrLags,nnHidden,fs,dispMode)
+set(handles.h_NightRunNNFitStatus, 'String',           'Complete');
+
+dispMode=get(handles.h_NNFitDisplay, 'Value');
+if dispMode == 2
+    dispMode = 0;
+end
+d=dMin:dStep:dMax;
+set(handles.h_NightRunEstimateErrStatus, 'String',     'In Progress');
+[~,~,~,~]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png',dispMode);
+set(handles.h_NightRunEstimateErrStatus, 'String',     'Complete');
+
+set(handles.h_NightRunCommandLogSaveStatus, 'String',  'In Progress');
+diary(get(handles.h_CommandLogFilename,'String'));
+disp(['[+++] Command Log File Saved: ' string(get(handles.h_CommandLogFilename, 'String'))]);
+set(handles.h_NightRunCommandLogSaveStatus, 'String',  'Complete');
+
+set(handles.h_NightRunParamLogSaveStatus, 'String',    'In Progress');
+indref=string(get(handles.h_indref, 'String'));
+eta=string(get(handles.h_eta, 'String'));
+fs=string(get(handles.h_fs, 'String'));
+nt=string(get(handles.h_nt, 'String'));
+dirName=string(get(handles.h_dirName,'String'));
+dMin=string(get(handles.h_dMin, 'String'));
+dMax=string(get(handles.h_dMax, 'String'));
+dStep=string(get(handles.h_dStep, 'String'));
+lambda=string(get(handles.h_lambda, 'String'));
+tcelsius=string(get(handles.h_tcelsius, 'String'));
+theta=string(get(handles.h_theta, 'String'));
+solvent=get(handles.h_solvent,'String');
+solvent=string(solvent{get(handles.h_solvent,'Value')});
+a0min=string(get(handles.h_a0min, 'String'));
+a0max=string(get(handles.h_a0max, 'String'));
+a0start=string(get(handles.h_a0start, 'String'));
+a1min=string(get(handles.h_a1min, 'String'));
+a1max=string(get(handles.h_a1max, 'String'));
+a1start=string(get(handles.h_a1start, 'String'));
+nnHidden=string(get(handles.h_nnHidden, 'String'));
+autocorrLags=string(get(handles.h_autocorrLags, 'String'));
+RoFFitPoints=string(get(handles.h_DLSFitRoFFitPoints, 'String'));
+NNTrainFunction=get(handles.h_NNTrainFunction, 'String');
+NNTrainFunction=string(NNTrainFunction{get(handles.h_NNTrainFunction, 'Value')});
+fileName=string(get(handles.h_ParametersLogFilename, 'String'));
+
+bufferParametersLogFile=strcat('Particle Minimum Diameter (nm) =',dMin,'\n', ...
+     'Particle Maximum Diameter (nm) =',dMax,'\n', ...
+     'Particle Diameter Step (nm) =',dStep,'\n', ...
+     'Solvent =',solvent,'\n',...
+     'Light Wavelength (nm) =',lambda,'\n',...
+     'Temperature (C) =',tcelsius,'\n',...
+     'Scattering Angle (deg) =',theta,'\n',...
+     'Lorentz Parameter a0 min =',a0min,'\n',...
+     'Lorentz Parameter a0 max =',a0max,'\n',...
+     'Lorentz Parameter a0 start =',a0start,'\n',...
+     'Lorentz Parameter a1 min =',a1min,'\n',...
+     'Lorentz Parameter a1 max =',a1max,'\n',...
+     'Lorentz Parameter a1 start =',a1start,'\n',...
+     'Sampling Frequency (Hz) =',fs,'\n',...
+     'Number of Samples =',nt,'\n',...
+     'Hidden Layer Size (neurons) =',nnHidden,'\n',...
+     'Autocorrelation Lags =',autocorrLags,'\n',...
+     'Refractive Index =',indref,'\n',...
+     'Viscosity (Nm/s2) =',eta,'\n',...
+     'Series Name =',dirName,'\n',...
+     'DLS Roll-off Search Fit Points =',RoFFitPoints,'\n',...
+     'Neural Network Training Function =',NNTrainFunction,'\n');
+fid = fopen(fileName,'wt');
+fprintf(fid, bufferParametersLogFile);
+fclose(fid);
+disp(['[+] Parameters File Saved: ' fileName]);
+set(handles.h_NightRunParamLogSaveStatus, 'String',    'Complete');
+
+cd('..');
+msgbox('Night Run Complete');
+
+
+
 
 
 % --- Executes on button press in pushbutton5.
@@ -625,27 +835,29 @@ function pushbutton7_Callback(hObject, eventdata, handles)
     
 
 
-% --- Executes on button press in pushbutton10.
-function pushbutton10_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton10 (see GCBO)
+% --- Executes on button press in h_CommandLogSave.
+function h_CommandLogSave_Callback(hObject, eventdata, handles)
+% hObject    handle to h_CommandLogSave (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-diary(get(handles.h_comandLogFilename,'String'));
+diary(get(handles.h_CommandLogFilename,'String'));
+disp(['[+++] Command Log File Saved: ' string(get(handles.h_CommandLogFilename, 'String'))]);
+msgbox('Command Log File Saved');
 
 
 
-function h_comandLogFilename_Callback(hObject, eventdata, handles)
-% hObject    handle to h_comandLogFilename (see GCBO)
+function h_CommandLogFilename_Callback(hObject, eventdata, handles)
+% hObject    handle to h_CommandLogFilename (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of h_comandLogFilename as text
-%        str2double(get(hObject,'String')) returns contents of h_comandLogFilename as a double
+% Hints: get(hObject,'String') returns contents of h_CommandLogFilename as text
+%        str2double(get(hObject,'String')) returns contents of h_CommandLogFilename as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function h_comandLogFilename_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to h_comandLogFilename (see GCBO)
+function h_CommandLogFilename_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_CommandLogFilename (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -744,7 +956,7 @@ set(handles.h_DLSFitRoFDisplay, 'Value', 2);
 set(handles.h_DLSFitRoFFitPoints, 'String', '');
 set(handles.h_DLSFitRoFFilenameA0, 'String', '');
 set(handles.h_DLSFitRoFFilenameA1, 'String', '');
-set(handles.h_comandLogFilename, 'String', '');
+set(handles.h_CommandLogFilename, 'String', '');
 set(handles.h_AutocorrDisplay, 'Value', 2);
 set(handles.h_AutocorrStatus, 'String', 'Status: Ready');
 set(handles.h_AutocorrFilename, 'String', '');
@@ -758,7 +970,17 @@ set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
 set(handles.h_ErrNNDLSDisplay, 'Value', 2);
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
- 
+set(handles.h_ParametersLogFilename, 'String', '');
+ set(handles.h_NightRunGenerateStatus, 'String',        'Ready');
+ set(handles.h_NightRunDLSFitSizeStatus, 'String',      'Ready');
+ set(handles.h_DLSFitRollOffStatus, 'String',           'Ready');
+ set(handles.h_NightRunAutocorrStatus, 'String',        'Ready');
+ set(handles.h_NightRunNNTrainStatus, 'String',         'Ready');
+ set(handles.h_NightRunNNFitStatus, 'String',           'Ready');
+ set(handles.h_NightRunEstimateErrStatus, 'String',     'Ready');
+ set(handles.h_NightRunCommandLogSaveStatus, 'String',  'Ready');
+ set(handles.h_NightRunParamLogSaveStatus, 'String',    'Ready');
+
 
 
 % --- Executes on button press in pushbuttonGenerateTimeSeries.
@@ -1378,8 +1600,10 @@ if dispMode == 2
     dispMode = 0;
 end
 d=dMin:dStep:dMax;
-    
+
+set(handles.h_ErrNNDLSStatus, 'String', 'Status: In Progress');
 [~,~,~,~]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png',dispMode);
+set(handles.h_ErrNNDLSStatus, 'String', 'Status: Complete');
 
 cd(currentPath);
 msgbox('NN & DLS Error Evaluation Complete');
@@ -1427,3 +1651,85 @@ function h_ErrNNDLSBrowseFilenameNN_Callback(hObject, eventdata, handles)
 ExPath = fullfile(FilePath, FileName);
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: NN File Selected');
 set(handles.h_ErrNNDLSFilenameNN, 'String', ExPath);
+
+
+% --- Executes on button press in h_ParametersLogFilename.
+function h_ParametersLogFilename_Callback(hObject, eventdata, handles)
+% hObject    handle to h_ParametersLogFilename (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    
+
+% --- Executes during object creation, after setting all properties.
+function h_ParametersLogFilename_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_ParametersLogFilename (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in h_ParametersLogSave.
+function h_ParametersLogSave_Callback(hObject, eventdata, handles)
+% hObject    handle to h_ParametersLogSave (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+indref=string(get(handles.h_indref, 'String'));
+eta=string(get(handles.h_eta, 'String'));
+fs=string(get(handles.h_fs, 'String'));
+nt=string(get(handles.h_nt, 'String'));
+dirName=string(get(handles.h_dirName,'String'));
+dMin=string(get(handles.h_dMin, 'String'));
+dMax=string(get(handles.h_dMax, 'String'));
+dStep=string(get(handles.h_dStep, 'String'));
+lambda=string(get(handles.h_lambda, 'String'));
+tcelsius=string(get(handles.h_tcelsius, 'String'));
+theta=string(get(handles.h_theta, 'String'));
+solvent=get(handles.h_solvent,'String');
+solvent=string(solvent{get(handles.h_solvent,'Value')});
+a0min=string(get(handles.h_a0min, 'String'));
+a0max=string(get(handles.h_a0max, 'String'));
+a0start=string(get(handles.h_a0start, 'String'));
+a1min=string(get(handles.h_a1min, 'String'));
+a1max=string(get(handles.h_a1max, 'String'));
+a1start=string(get(handles.h_a1start, 'String'));
+nnHidden=string(get(handles.h_nnHidden, 'String'));
+autocorrLags=string(get(handles.h_autocorrLags, 'String'));
+RoFFitPoints=string(get(handles.h_DLSFitRoFFitPoints, 'String'));
+NNTrainFunction=get(handles.h_NNTrainFunction, 'String');
+NNTrainFunction=string(NNTrainFunction{get(handles.h_NNTrainFunction, 'Value')});
+fileName=string(get(handles.h_ParametersLogFilename, 'String'));
+
+bufferParametersLogFile=strcat('Particle Minimum Diameter (nm) =',dMin,'\n', ...
+     'Particle Maximum Diameter (nm) =',dMax,'\n', ...
+     'Particle Diameter Step (nm) =',dStep,'\n', ...
+     'Solvent =',solvent,'\n',...
+     'Light Wavelength (nm) =',lambda,'\n',...
+     'Temperature (C) =',tcelsius,'\n',...
+     'Scattering Angle (deg) =',theta,'\n',...
+     'Lorentz Parameter a0 min =',a0min,'\n',...
+     'Lorentz Parameter a0 max =',a0max,'\n',...
+     'Lorentz Parameter a0 start =',a0start,'\n',...
+     'Lorentz Parameter a1 min =',a1min,'\n',...
+     'Lorentz Parameter a1 max =',a1max,'\n',...
+     'Lorentz Parameter a1 start =',a1start,'\n',...
+     'Sampling Frequency (Hz) =',fs,'\n',...
+     'Number of Samples =',nt,'\n',...
+     'Hidden Layer Size (neurons) =',nnHidden,'\n',...
+     'Autocorrelation Lags =',autocorrLags,'\n',...
+     'Refractive Index =',indref,'\n',...
+     'Viscosity (Nm/s2) =',eta,'\n',...
+     'Series Name =',dirName,'\n',...
+     'DLS Roll-off Search Fit Points =',RoFFitPoints,'\n',...
+     'Neural Network Training Function =',NNTrainFunction,'\n');
+fid = fopen(fileName,'wt');
+fprintf(fid, bufferParametersLogFile);
+fclose(fid);
+
+disp(['[+] Parameters File Saved: ' fileName]);
+msgbox('Parameters File Saved');
