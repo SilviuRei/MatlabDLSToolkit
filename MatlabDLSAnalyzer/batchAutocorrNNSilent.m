@@ -1,4 +1,4 @@
-function [d, deltaT] = batchAutocorrNN (name, index1, index2, autocorrLags, frequency, dispMode)
+function [d, deltaT] = batchAutocorrNNSilent (name, index1, index2, autocorrLags, frequency, dispMode)
 %-------------------------------------------------------------------------------
 % Version 20171030, Silviu Rei
 % function [d, deltaT] = batchAutocorrNN (name, index1, index2, autocorrLags, dispMode)

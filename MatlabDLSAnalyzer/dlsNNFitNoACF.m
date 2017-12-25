@@ -1,4 +1,4 @@
-function [dFitNN] = dlsNNFit (tsName,mTs,dMin,dMax,dStep,index1,index2,istep,autocorrLags,nnHidden,fs,dispMode)
+function [dFitNN] = dlsNNFit (tsName,mACF,dMin,dMax,dStep,index1,index2,istep,autocorrLags,nnHidden,fs,dispMode)
 %-------------------------------------------------------------------------------
 % Version 20171223, Silviu Rei
 % function 
@@ -10,58 +10,54 @@ function [dFitNN] = dlsNNFit (tsName,mTs,dMin,dMax,dStep,index1,index2,istep,aut
 %-------------------------------------------------------------------------------
 indsave = 2;
 disp('---------------------------------------------------------------------');
-disp('[++] Neural Network DLS Fit');
-disp('   [+] Calculating ACF');
-[acf,~]=run_analizor_autocor_2(tsName,mTs,autocorrLags,fs,'png',indsave,...
-    dMin,dMax,dStep,index1,index2,istep,dispMode);
-disp('   [-] ACF Calculation Complete');
+disp('[++] Neural Network DLS Fit No Autocorr');
 h=999;
 m=999;
 s=999;
 nSteps = (index2-index1)/istep+1;
-waitbarHandle = waitbar(0,['Neural Network DLS Fit...' ...
+%dFitNN = zeroes(nSteps);
+if dispMode == 1
+    waitbarHandle = waitbar(0,['Neural Network DLS Fit...' ...
         newline 'Step:'  ...
         newline 'Time Left = ' ...
         newline 'Progress: 0%']);
+end
 k=1;
 t0=clock;
 for i=index1:istep:index2
     tic;
-    disp(['   [+]Step ' num2str(k) ' out of ' num2str(nSteps)...
+    disp(['   [+] Step ' num2str(k) ' out of ' num2str(nSteps)...
         ', Time left=' num2str(h) ':' num2str(m) ':' num2str(s)]);
-    waitbar((k-1)/nSteps, waitbarHandle,['Neural Network DLS Fit...' ...
-        newline 'Step: ' num2str(k) ' out of ' num2str(nSteps)  ...
-        newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
-        newline 'Progress: ' num2str(100*(k-1)/nSteps) ' %']);
+    if dispMode == 1
+        waitbar((k-1)/nSteps, waitbarHandle,['Neural Network DLS Fit...' ...
+            newline 'Step: ' num2str(k) ' out of ' num2str(nSteps)  ...
+            newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
+            newline 'Progress: ' num2str(100*(k-1)/nSteps) ' %']);
+    end
 	disp('   [+] NN DLS Estimating Average Particle Size');
-    dFitNN(i)=nn_dls(acf(:,i));
+    dFitNN(i)=nn_dls(mACF(:,i));
 	disp('   [-] NN DLS Estimation Complete');
     disp(['        [-] Diameter = ' num2str(dFitNN(i)) ' nanometers']);
     deltat = toc;
     [h, m, s] = sec2time(deltat*(index2-i));
     k=k+1;
 end
-close(waitbarHandle);
+if dispMode == 1
+    close(waitbarHandle);
+end
 t1=clock;
 deltaT = etime(t1,t0);
 [h, m, s] = sec2time(deltaT);
 disp(['[+++] Total Duration of NN DLS = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
 
-fileNameFitNN=['dlsNNFit_dFitN_d-' num2str(dMin) '-' num2str(dStep) '-' num2str(dMax) '-' ...
+fileNameFitNN=['dlsNNFitNoACF_dFitNN_d-' num2str(dMin) '-' num2str(dStep) '-' num2str(dMax) '-' ...
         'autocorrLags-' num2str(autocorrLags) '-'...
         'nnHidden-' num2str(nnHidden) '-'...
         '_f-' num2str(fs) '.txt'];
 save(fileNameFitNN,'dFitNN','-ascii');
 disp(['   [+] File Saved: ' fileNameFitNN]);
 
-fileNameAcf=['dlsNNFit_acf_d-' num2str(dMin) '-' num2str(dMax) '-' num2str(dStep) '-' ...
-        'autocorrLags-' num2str(autocorrLags) '-'...
-        'nnHidden-' num2str(nnHidden) '-'...
-        '_f-' num2str(fs) '.txt'];
-save(fileNameAcf,'acf','-ascii');
-disp(['   [+] File Saved: ' fileNameAcf]);
-
-fileNameDeltaT=['dlsNNFit_deltat-d-' num2str(dMin) '-' num2str(dMax) '-' num2str(dStep) '-' ...
+fileNameDeltaT=['dlsNNFitNoACF_deltat-d-' num2str(dMin) '-' num2str(dMax) '-' num2str(dStep) '-' ...
         'autocorrLags-' num2str(autocorrLags) '-'...
         'nnHidden-' num2str(nnHidden) '-'...
         '_f-' num2str(fs) '.txt'];

@@ -22,7 +22,7 @@ function varargout = DLSTool(varargin)
 
 % Edit the above text to modify the response to help DLSTool
 
-% Last Modified by GUIDE v2.5 24-Dec-2017 22:16:19
+% Last Modified by GUIDE v2.5 24-Dec-2017 21:13:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -120,7 +120,6 @@ set(handles.h_nnHiddenStep, 'String', '');
 set(handles.h_NNOptimizerStatus, 'String', 'Status: Ready');
 set(handles.h_NNOptimizerDisplay, 'Value', 2);
 set(handles.h_NNOptimizerFilename, 'String', '');
-set(handles.h_averagingSteps, 'String', '');
 
 
 
@@ -548,7 +547,7 @@ default_solvent          = 'water';
 default_solvent_nr       = 1;
 default_fs               = 16000;
 default_nt               = 32768;
-default_nnHidden         = 220;
+default_nnHidden         = 150;
 default_autocorrlags     = 999;
 
 [dMin,dMax,dStep,indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,...
@@ -617,7 +616,6 @@ set(handles.h_nnHiddenStep, 'String', '10');
 set(handles.h_NNOptimizerStatus, 'String', 'Status: Ready');
 set(handles.h_NNOptimizerDisplay, 'Value', 2);
 set(handles.h_NNOptimizerFilename, 'String', '');
-set(handles.h_averagingSteps, 'String', '10');
  
 
 % --- Executes on button press in pushbutton2.
@@ -719,7 +717,6 @@ set(handles.h_NightRunAutocorrStatus, 'String',        'In Progress');
     dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,dispMode);
 set(handles.h_NightRunAutocorrStatus, 'String',        'Complete');
 
-dispMode=1;
 dm = dMin:dStep:dMax;
 switch trainFcnId
     case 1
@@ -742,7 +739,7 @@ switch trainFcnId
         trainFcn = 'traingdx';
 end
 set(handles.h_NightRunNNTrainStatus, 'String',         'In Progress');
-[~, ~] = nnDlsTrain(acf,dm,nnHidden,trainFcn,dispMode);
+[~, ~] = nnDlsTrain(acf,dm,nnHidden,trainFcn);
 set(handles.h_NightRunNNTrainStatus, 'String',         'Complete');
 
 dispMode=get(handles.h_NNFitDisplay, 'Value');
@@ -1002,7 +999,6 @@ set(handles.h_nnHiddenStep, 'String', '');
 set(handles.h_NNOptimizerStatus, 'String', 'Status: Ready');
 set(handles.h_NNOptimizerDisplay, 'Value', 2);
 set(handles.h_NNOptimizerFilename, 'String', '');
-set(handles.h_averagingSteps, 'String', '');
 
 
 
@@ -1497,10 +1493,9 @@ dMin=str2double(get(handles.h_dMin, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
 dMax=str2double(get(handles.h_dMax, 'String'));
 nnHidden=str2double(get(handles.h_nnHidden, 'String'));
-dm = dMin:dStep:dMax;
-dispMode=1;
-
 trainFcnId=get(handles.h_NNTrainFunction, 'Value');
+dm = dMin:dStep:dMax;
+
 switch trainFcnId
     case 1
         trainFcn = 'trainlm';
@@ -1523,7 +1518,9 @@ switch trainFcnId
 end
 
 set(handles.h_NNTrainStatus, 'String', 'Status: In Progress');
-[~, ~] = nnDlsTrain(acf,dm,nnHidden,trainFcn,dispMode);
+
+[~, ~] = nnDlsTrain(acf,dm,nnHidden,trainFcn);
+
 set(handles.h_NNTrainStatus, 'String', 'Status: Complete');
     
 cd(currentPath);
@@ -1588,7 +1585,9 @@ if dispMode == 2
 end
 
 set(handles.h_NNFitStatus, 'String', 'Status: In Progress');
-[~] = dlsNNFit (filename,mTS,dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,autocorrLags,nnHidden,fs,dispMode);
+
+[~] = dlsNNFit (filename,mTS,dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,autocorrLags,nnHidden,fs,dispMode)
+
 set(handles.h_NNFitStatus, 'String', 'Status: Complete');
     
 cd(currentPath);
@@ -1766,63 +1765,8 @@ function h_NNOptimizerStart_Callback(hObject, eventdata, handles)
 % hObject    handle to h_NNOptimizerStart (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-ExPath = get(handles.h_NNOptimizerFilename, 'String');
-currentPath = pwd;
-mACF = load(ExPath);
 
-[filepath,filename,fileext] = fileparts(ExPath);
-cd(filepath);
-
-fs=str2double(get(handles.h_fs, 'String'));
-dMin=str2double(get(handles.h_dMin, 'String'));
-dMax=str2double(get(handles.h_dMax, 'String'));
-dStep=str2double(get(handles.h_dStep, 'String'));
-nnHidden=str2double(get(handles.h_nnHidden, 'String'));
-dispMode=get(handles.h_NNFitDisplay, 'Value');
-autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
-nnHidden1=str2double(get(handles.h_nnHidden1, 'String'));
-nnHidden2=str2double(get(handles.h_nnHidden2, 'String'));
-nnHiddenStep=str2double(get(handles.h_nnHiddenStep, 'String'));
-averagingSteps=str2double(get(handles.h_averagingSteps, 'String'));
-
-dm = dMin:dStep:dMax;
-
-if dispMode == 2
-    dispMode = 0;
-end
-
-trainFcnId=get(handles.h_NNTrainFunction, 'Value');
-switch trainFcnId
-    case 1
-        trainFcn = 'trainlm';
-    case 2
-        trainFcn = 'trainbfg';
-    case 3
-        trainFcn = 'trainrp';
-    case 4
-        trainFcn = 'trainscg';
-    case 5
-        trainFcn = 'traincgb';
-    case 6
-        trainFcn = 'traincgf';
-    case 7
-        trainFcn = 'traincgp';
-    case 8
-        trainFcn = 'trainoss';
-    case 9
-        trainFcn = 'traingdx';
-end
-%calculate first acf, feed it to the optimizer. Do not dlsNNfit for each
-%step as this is a waste of time.
-set(handles.h_NNOptimizerStatus, 'String', 'Status: In Progress');
-[~, ~, ~, ~] = dlsNNOptimizer (mACF, dm, dMin, dMax,dStep, filename, ...
-    1, (dMax-dMin)/dStep+1, 1, autocorrLags, fs, nnHidden1, nnHidden2, ...
-    nnHiddenStep, averagingSteps, trainFcn, dispMode);
-set(handles.h_NNFitStatus, 'String', 'Status: Complete');
-    
-cd(currentPath);
-msgbox('Neural Network Optimization Complete');
-
+[nnHidden, mF, errel, dur] = dlsNNOptimizer (x, t, range1, range2, name, index1, index2, autocorrLags, frequency, nnHidden1, nnHidden2, nnHiddenStep, averagingSteps, dClassical, dispMode)
 
 
 % --- Executes on selection change in h_NNOptimizerDisplay.
@@ -1917,29 +1861,6 @@ function h_nnHiddenStep_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function h_nnHiddenStep_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to h_nnHiddenStep (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function h_averagingSteps_Callback(hObject, eventdata, handles)
-% hObject    handle to h_averagingSteps (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of h_averagingSteps as text
-%        str2double(get(hObject,'String')) returns contents of h_averagingSteps as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function h_averagingSteps_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to h_averagingSteps (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 

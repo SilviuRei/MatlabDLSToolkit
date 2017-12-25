@@ -1,4 +1,4 @@
-function [deltaT, net] = nnDlsTrain(acf, d, nnHidden, trainFcn)
+function [deltaT, net] = nnDlsTrain(acf, d, nnHidden, trainFcn, dispMode)
 %------------------------------------------------------------
 % Version 20171030, Silviu Rei
 % Solve an Input-Output Fitting problem with a Neural Network
@@ -24,8 +24,8 @@ t0 = clock;
 
 % Create directories for saving the files
 mkdir('nn_dls');
-mkdir('nn_dls/nn_dls_figs');
-mkdir('nn_dls/nn_dls_workspace');
+%mkdir('nn_dls/nn_dls_figs');
+%mkdir('nn_dls/nn_dls_workspace');
 mkdir('nn_dls/nn_dls_data');
 
 % Choose a Training Function
@@ -39,8 +39,11 @@ mkdir('nn_dls/nn_dls_data');
 % Create a Fitting Network
 hiddenLayerSize = nnHidden;
 net = fitnet(hiddenLayerSize,trainFcn);
-%net.trainParam.showWindow = 0;%uncoment to hide training window
-net.trainParam.showWindow = 1;%uncomment to show training window
+if dispMode == 1
+    net.trainParam.showWindow = 1;
+elseif dispMode == 0
+    net.trainParam.showWindow = 0;
+end
 
 % Setup Division of Data for Training, Validation, Testing
 net.divideParam.trainRatio = 70/100;
