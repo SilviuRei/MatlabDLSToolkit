@@ -1,5 +1,8 @@
 function [acf,tlags]=run_analizor_autocor_2(tsName,x,steps,fs,extgr,indsave,bS,eS,sS,i1,i2,istep,dispMode)
-%
+%--------------------------------------------------------------------------
+% Version 20171225, Silviu Rei based on run_analizor_autocor_2 by Dan Chicea
+%--------------------------------------------------------------------------
+% Original Comment by Dan Chicea
 % functie pt a calcula f de autocorelatie pt un grup de serii din matricea
 % cu seriile temporale
 %
@@ -15,7 +18,7 @@ function [acf,tlags]=run_analizor_autocor_2(tsName,x,steps,fs,extgr,indsave,bS,e
 %    exemplu apelare, pentru coloanele de la 10 la 20 din matricea cu
 %    seriile temporale:
 %   [acf,lags]=run_analizor_autocor_2('acft17',at17_1_3000,1000,16000,'jpg',0,10,20);
-%
+%--------------------------------------------------------------------------
 disp('---------------------------------------------------------------------');
 disp('[+++] Autocorrelation Computing - Time Series Matrix');
 disp(['   [+] Using ' tsName]);
@@ -37,7 +40,7 @@ for i=i1:istep:i2
             newline 'Step: ' num2str(k) ' out of ' num2str(numSteps)  ...
             newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
             newline 'Progress: ' num2str(100*(k-1)/numSteps) ' %']);
-    seriesName = [tsName '-' num2str(dM(i))];
+    seriesName = [num2str(dM(i)) '-' tsName ];
     [acf(:,k),lags]=analizor_autocor2(seriesName,x(:,i),steps,fs,extgr,indsave,dispMode);
     deltat = toc;
     timeLeft = deltat*(numSteps-k);
@@ -47,6 +50,6 @@ end
 close(waitbarHandle);
 tlags=lags./fs;     % tlags reprezinta timpul (abscisa functiei de autocorelatie)
 % that's all
-save([tsName '_acf.txt'],'acf','-ascii');
-disp(['   [+] File Saved: ' tsName '_acf.txt']);
+save(['acf_' tsName '.txt'],'acf','-ascii');
+disp(['   [+] File Saved: acf_' tsName '.txt']);
 disp('[+++] Autocorrelation Computing Complete');

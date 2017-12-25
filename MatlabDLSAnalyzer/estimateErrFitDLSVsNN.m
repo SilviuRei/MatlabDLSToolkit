@@ -13,23 +13,27 @@ figureNumber2=21;
 figureNumber3=22;
 figureNumber4=23;
 
+disp('[+++] Error Estimation Function Started');
+
 [~, errabsFitDLS, errelFitDLS] = xdif(d, dFitDLS);
 [~, errabsFitNN, errelFitNN] = xdif(d, dFitNN);
+
+disp('   [-] Error Estimation Complete');
 
 errelFitDLS = errelFitDLS.*100;
 errelFitNN = errelFitNN.*100;
 
 save('dlsFitErrAbs.txt','errabsFitDLS','-ascii');
-disp('[+] File Saved: dlsFitErrAbs.txt')
+disp('   [+] File Saved: dlsFitErrAbs.txt')
 
 save('dlsNNErrAbs.txt','errabsFitNN','-ascii');
-disp('[+] File Saved: dlsNNErrAbs.txt')
+disp('   [+] File Saved: dlsNNErrAbs.txt')
 
 save('dlsFitErrRel.txt','errelFitDLS','-ascii');
-disp('[+] File Saved: dlsFitErrRel.txt')
+disp('   [+] File Saved: dlsFitErrRel.txt')
 
 save('dlsNNErrRel.txt','errelFitNN','-ascii');
-disp('[+] File Saved: dlsNNErrRel.txt')
+disp('   [+] File Saved: dlsNNErrRel.txt')
 
 if dispMode==1
     figure(figureNumber1);
@@ -71,14 +75,15 @@ title("Relative Error Fit NN");
 xlabel("Particle Size (nm)");
 ylabel("Rel Err(%)");
 
-saveas(figureNumber1,'dlsFitErrAbs',typeG);
-disp('[+] File Saved: dlsFitErrAbs.png')
+saveas(figureNumber1,'plot_dlsFitErrAbs',typeG);
+disp('   [+] File Saved: plot_dlsFitErrAbs.png')
 
-saveas(figureNumber2,'dlsNNErrAbs',typeG);
-disp('[+] File Saved: dlsNNErrAbs.png')
+saveas(figureNumber2,'plot_dlsNNErrAbs',typeG);
+disp('   [+] File Saved: plot_dlsNNErrAbs.png')
 
-saveas(figureNumber3,'dlsFitErrRel',typeG);
-disp('[+] File Saved: dlsFitErrRel.png')
+saveas(figureNumber3,'plot_dlsFitErrRel',typeG);
+disp('   [+] File Saved: plot_dlsFitErrRel.png')
 
-saveas(figureNumber4,'dlsNNErrRel',typeG);
-disp('[+] File Saved: dlsNNErrRel.png')
+saveas(figureNumber4,'plot_dlsNNErrRel',typeG);
+disp('   [+] File Saved: plot_dlsNNErrRel.png')
+disp('[+++] Error Estimation Function Complete');

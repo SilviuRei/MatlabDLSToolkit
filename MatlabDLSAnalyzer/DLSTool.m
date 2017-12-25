@@ -22,7 +22,7 @@ function varargout = DLSTool(varargin)
 
 % Edit the above text to modify the response to help DLSTool
 
-% Last Modified by GUIDE v2.5 24-Dec-2017 22:16:19
+% Last Modified by GUIDE v2.5 25-Dec-2017 13:16:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,7 +59,7 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-disp('[+++] DLS Tool v1.0 Started');
+disp('[+++] DLS Tool v1.1 Started');
 set(handles.h_dMin, 'String', '');
 set(handles.h_dMax, 'String', '');
 set(handles.h_dStep, 'String', '');
@@ -649,7 +649,6 @@ set(handles.h_NightRunEstimateErrStatus, 'String',     'Ready');
 set(handles.h_NightRunCommandLogSaveStatus, 'String',  'Ready');
 set(handles.h_NightRunParamLogSaveStatus, 'String',    'Ready');
 
-
 indref=str2double(get(handles.h_indref, 'String'));
 eta=str2double(get(handles.h_eta, 'String'));
 fs=str2double(get(handles.h_fs, 'String'));
@@ -678,6 +677,9 @@ dirName = [dirName '_d' num2str(dMin) '-' num2str(dStep) '-' ...
 	 '-fs-' num2str(fs) '-nt-' num2str(nt)];
 mkdir(dirName);
 cd(dirName);
+
+diary on;
+diary(get(handles.h_CommandLogFilename,'String'));
     
 set(handles.h_NightRunGenerateStatus, 'String',        'In Progress');
 [t,mTS,a0,a1]=batchGenTsStepSize(dirName,dMin,dStep,dMax,theta,lambda,...
@@ -692,6 +694,7 @@ end
 if cleanMode == 2
     cleanMode = 0;
 end
+
 set(handles.h_NightRunDLSFitSizeStatus, 'String',      'In Progress');
 dm=dMin:dStep:dMax;
 [dFitDLS,a0FitDLS,a1FitDLS,~] = batchDLSFitFindA0A1Size(mTS, dm, ...
@@ -704,6 +707,7 @@ deltaFit=str2double(get(handles.h_DLSFitRoFFitPoints, 'String'));
 if dispMode == 2
     dispMode = 0;
 end
+
 set(handles.h_DLSFitRollOffStatus, 'String',           'In Progress');
 [~] = batchDLSRollOffFrequencySize(a0FitDLS, a1FitDLS, dMin, dMax, dStep, ...
     lambda,tcelsius,theta,indref,eta,fs,deltaFit,'png', dispMode);
@@ -714,6 +718,7 @@ dispMode=get(handles.h_AutocorrDisplay, 'Value');
 if dispMode == 2
     dispMode = 0;
 end
+
 set(handles.h_NightRunAutocorrStatus, 'String',        'In Progress');
 [acf,tlags]=run_analizor_autocor_2(dirName,mTS,autocorrLags,fs,'png',indsave,...
     dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,dispMode);
@@ -749,8 +754,10 @@ dispMode=get(handles.h_NNFitDisplay, 'Value');
 if dispMode == 2
     dispMode = 0;
 end
+
 set(handles.h_NightRunNNFitStatus, 'String',           'In Progress');
-[dFitNN] = dlsNNFit (dirName,mTS,dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,autocorrLags,nnHidden,fs,dispMode);
+[dFitNN] = dlsNNFitNoACF (dirName,acf,dMin,dMax,dStep,1,...
+    (dMax-dMin)/dStep+1,1,autocorrLags,nnHidden,fs,dispMode);
 set(handles.h_NightRunNNFitStatus, 'String',           'Complete');
 
 dispMode=get(handles.h_NNFitDisplay, 'Value');
@@ -758,13 +765,16 @@ if dispMode == 2
     dispMode = 0;
 end
 d=dMin:dStep:dMax;
+
 set(handles.h_NightRunEstimateErrStatus, 'String',     'In Progress');
 [~,~,~,~]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png',dispMode);
 set(handles.h_NightRunEstimateErrStatus, 'String',     'Complete');
 
 set(handles.h_NightRunCommandLogSaveStatus, 'String',  'In Progress');
-diary(get(handles.h_CommandLogFilename,'String'));
-disp(['[+++] Command Log File Saved: ' string(get(handles.h_CommandLogFilename, 'String'))]);
+diary off;
+displayString = strcat('[+++] Command Log File Saved: ',...
+    string(get(handles.h_CommandLogFilename, 'String')));
+disp(displayString);
 set(handles.h_NightRunCommandLogSaveStatus, 'String',  'Complete');
 
 set(handles.h_NightRunParamLogSaveStatus, 'String',    'In Progress');
@@ -819,7 +829,8 @@ bufferParametersLogFile=strcat('Particle Minimum Diameter (nm)=',dMin,'\n', ...
 fid = fopen(fileName,'wt');
 fprintf(fid, bufferParametersLogFile);
 fclose(fid);
-disp(['[+] Parameters File Saved: ' fileName]);
+displayString=strcat('[+] Parameters File Saved: ', fileName);
+disp(displayString);
 set(handles.h_NightRunParamLogSaveStatus, 'String',    'Complete');
 
 cd('..');
@@ -851,14 +862,15 @@ function pushbutton7_Callback(hObject, eventdata, handles)
     
 
 
-% --- Executes on button press in h_CommandLogSave.
-function h_CommandLogSave_Callback(hObject, eventdata, handles)
-% hObject    handle to h_CommandLogSave (see GCBO)
+% --- Executes on button press in h_CommandLogStart.
+function h_CommandLogStart_Callback(hObject, eventdata, handles)
+% hObject    handle to h_CommandLogStart (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+diary on;
 diary(get(handles.h_CommandLogFilename,'String'));
-disp(['[+++] Command Log File Saved: ' string(get(handles.h_CommandLogFilename, 'String'))]);
-msgbox('Command Log File Saved');
+disp('[+++] Command Logging Started ');
+msgbox('Command Logging Started');
 
 
 
@@ -1016,7 +1028,6 @@ eta=str2double(get(handles.h_eta, 'String'));
 fs=str2double(get(handles.h_fs, 'String'));
 nt=str2double(get(handles.h_nt, 'String'));
 dirName=get(handles.h_dirName,'String');
-
 dMin=str2double(get(handles.h_dMin, 'String'));
 dMax=str2double(get(handles.h_dMax, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
@@ -1028,23 +1039,16 @@ dirName = [dirName '_d' num2str(dMin) '-' num2str(dStep) '-' ...
      num2str(dMax) '-theta-' num2str(theta) '-lambda-' num2str(lambda) ...
 	 '-indref-' num2str(indref) '-eta-' num2str(eta) '-tcelsius-' num2str(tcelsius) ...
 	 '-fs-' num2str(fs) '-nt-' num2str(nt)];
-    
 mkdir(dirName);
 cd(dirName);
-    
+
 set(handles.h_generateStatus, 'String', 'Status: In Progress');
-    
 [~,~,~,~]=batchGenTsStepSize(dirName,dMin,dStep,dMax,theta,lambda,...
      indref,eta,tcelsius,fs,nt,1);
-    
 set(handles.h_generateStatus, 'String', 'Status: Complete');
-    
+
 cd('..');
-
 msgbox('Time Series Matrix Generation Complete');
-
-    
-
 
 
 function h_dirName_Callback(hObject, eventdata, handles)
@@ -1227,8 +1231,7 @@ function h_pushbuttonDLSFit_Callback(hObject, eventdata, handles)
 ExPath = get(handles.h_DLSFitFilename, 'String');
 currentPath = pwd;
 mTS = load(ExPath);
-
-[filepath,filename,fileext] = fileparts(ExPath);
+[filepath,filename,~] = fileparts(ExPath);
 cd(filepath);
 
 indref=str2double(get(handles.h_indref, 'String'));
@@ -1248,23 +1251,18 @@ a1min=str2double(get(handles.h_a1min, 'String'));
 a1max=str2double(get(handles.h_a1max, 'String'));
 dispMode=get(handles.h_DLSFitDisplay, 'Value');
 cleanMode=get(handles.h_DLSFitClean, 'Value');
-
 if dispMode == 2
     dispMode = 0;
 end
-
 if cleanMode == 2
     cleanMode = 0;
 end
-
-set(handles.h_DLSFitStatus, 'String', 'Status: In Progress');
-
 dm=dMin:dStep:dMax;
 
+set(handles.h_DLSFitStatus, 'String', 'Status: In Progress');
 [~,~,~,~] = batchDLSFitFindA0A1Size(mTS, dm, ...
     1, (dMax-dMin)/dStep+1, 1, fs, theta, lambda, indref, eta, tcelsius, ...
     a0start, a0min, a0max, a1start, a1min, a1max, dispMode, cleanMode);
-    
 set(handles.h_DLSFitStatus, 'String', 'Status: Complete');
     
 cd(currentPath);
@@ -1296,16 +1294,13 @@ tcelsius=str2double(get(handles.h_tcelsius, 'String'));
 theta=str2double(get(handles.h_theta, 'String'));
 dispMode=get(handles.h_DLSFitRoFDisplay, 'Value');
 deltaFit=str2double(get(handles.h_DLSFitRoFFitPoints, 'String'));
-
 if dispMode == 2
     dispMode = 0;
 end
 
 set(handles.h_DLSFitRoFStatus, 'String', 'Status: In Progress');
-
 [~] = batchDLSRollOffFrequencySize(a0FitDLS, a1FitDLS, dMin, dMax, dStep, ...
     lambda,tcelsius,theta,indref,eta,fs,deltaFit,'png', dispMode);
-    
 set(handles.h_DLSFitRoFStatus, 'String', 'Status: Complete');
     
 cd(currentPath);
@@ -1387,7 +1382,7 @@ ExPath = get(handles.h_AutocorrFilename, 'String');
 currentPath = pwd;
 mTS = load(ExPath);
 
-[filepath,filename,fileext] = fileparts(ExPath);
+[filepath,filename,~] = fileparts(ExPath);
 cd(filepath);
 
 indsave=2;
@@ -1395,19 +1390,15 @@ fs=str2double(get(handles.h_fs, 'String'));
 dMin=str2double(get(handles.h_dMin, 'String'));
 dMax=str2double(get(handles.h_dMax, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
-
 dispMode=get(handles.h_AutocorrDisplay, 'Value');
 autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
-
 if dispMode == 2
     dispMode = 0;
 end
 
 set(handles.h_AutocorrStatus, 'String', 'Status: In Progress');
-
 [~,~]=run_analizor_autocor_2(filename,mTS,autocorrLags,fs,'png',indsave,...
     dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,dispMode);
-
 set(handles.h_AutocorrStatus, 'String', 'Status: Complete');
     
 cd(currentPath);
@@ -1490,7 +1481,7 @@ ExPath = get(handles.h_NNTrainFilename, 'String');
 currentPath = pwd;
 acf = load(ExPath);
 
-[filepath,filename,fileext] = fileparts(ExPath);
+[filepath,filename,~] = fileparts(ExPath);
 cd(filepath);
 
 dMin=str2double(get(handles.h_dMin, 'String'));
@@ -1499,7 +1490,6 @@ dMax=str2double(get(handles.h_dMax, 'String'));
 nnHidden=str2double(get(handles.h_nnHidden, 'String'));
 dm = dMin:dStep:dMax;
 dispMode=1;
-
 trainFcnId=get(handles.h_NNTrainFunction, 'Value');
 switch trainFcnId
     case 1
@@ -1572,7 +1562,7 @@ ExPath = get(handles.h_NNFitFilename, 'String');
 currentPath = pwd;
 mTS = load(ExPath);
 
-[filepath,filename,fileext] = fileparts(ExPath);
+[filepath,filename,~] = fileparts(ExPath);
 cd(filepath);
 
 fs=str2double(get(handles.h_fs, 'String'));
@@ -1582,7 +1572,6 @@ dStep=str2double(get(handles.h_dStep, 'String'));
 nnHidden=str2double(get(handles.h_nnHidden, 'String'));
 dispMode=get(handles.h_NNFitDisplay, 'Value');
 autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
-
 if dispMode == 2
     dispMode = 0;
 end
@@ -1605,17 +1594,14 @@ dFitDLS = load(ExPath);
 
 ExPath = get(handles.h_ErrNNDLSFilenameNN, 'String');
 dFitNN = load(ExPath);
-
 currentPath = pwd;
-
-[filepath,filename,fileext] = fileparts(ExPath);
+[filepath,filename,~] = fileparts(ExPath);
 cd(filepath);
 
 dMin=str2double(get(handles.h_dMin, 'String'));
 dMax=str2double(get(handles.h_dMax, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
 dispMode=get(handles.h_NNFitDisplay, 'Value');
-
 if dispMode == 2
     dispMode = 0;
 end
@@ -1770,27 +1756,23 @@ ExPath = get(handles.h_NNOptimizerFilename, 'String');
 currentPath = pwd;
 mACF = load(ExPath);
 
-[filepath,filename,fileext] = fileparts(ExPath);
+[filepath,filename,~] = fileparts(ExPath);
 cd(filepath);
 
 fs=str2double(get(handles.h_fs, 'String'));
 dMin=str2double(get(handles.h_dMin, 'String'));
 dMax=str2double(get(handles.h_dMax, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
-nnHidden=str2double(get(handles.h_nnHidden, 'String'));
 dispMode=get(handles.h_NNFitDisplay, 'Value');
 autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
 nnHidden1=str2double(get(handles.h_nnHidden1, 'String'));
 nnHidden2=str2double(get(handles.h_nnHidden2, 'String'));
 nnHiddenStep=str2double(get(handles.h_nnHiddenStep, 'String'));
 averagingSteps=str2double(get(handles.h_averagingSteps, 'String'));
-
 dm = dMin:dStep:dMax;
-
 if dispMode == 2
     dispMode = 0;
 end
-
 trainFcnId=get(handles.h_NNTrainFunction, 'Value');
 switch trainFcnId
     case 1
@@ -1812,8 +1794,7 @@ switch trainFcnId
     case 9
         trainFcn = 'traingdx';
 end
-%calculate first acf, feed it to the optimizer. Do not dlsNNfit for each
-%step as this is a waste of time.
+
 set(handles.h_NNOptimizerStatus, 'String', 'Status: In Progress');
 [~, ~, ~, ~] = dlsNNOptimizer (mACF, dm, dMin, dMax,dStep, filename, ...
     1, (dMax-dMin)/dStep+1, 1, autocorrLags, fs, nnHidden1, nnHidden2, ...
@@ -1948,3 +1929,13 @@ function h_averagingSteps_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in h_CommandLogStop.
+function h_CommandLogStop_Callback(hObject, eventdata, handles)
+% hObject    handle to h_CommandLogStop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+diary off;
+disp(['[+++] Command Logging Stopped. Log Saved : ' string(get(handles.h_CommandLogFilename, 'String'))]);
+msgbox('Command Logging Stopped\nLog Saved');

@@ -1,4 +1,4 @@
-function [dFitNN] = dlsNNFit (tsName,mACF,dMin,dMax,dStep,index1,index2,istep,autocorrLags,nnHidden,fs,dispMode)
+function [dFitNN] = dlsNNFitNoACF (tsName,mACF,dMin,dMax,dStep,index1,index2,istep,autocorrLags,nnHidden,fs,dispMode)
 %-------------------------------------------------------------------------------
 % Version 20171223, Silviu Rei
 % function 

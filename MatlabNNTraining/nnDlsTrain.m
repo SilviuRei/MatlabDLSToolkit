@@ -16,9 +16,8 @@ function [deltaT, net] = nnDlsTrain(acf, d, nnHidden, trainFcn, dispMode)
 %	net             = matlab neural network object
 %------------------------------------------------------------
 warning off;
-disp('---------------------------------------------------------------------');
-disp('[+++] Starting Neural Network Training');
-disp(['   [+] Parameters: Hidden Layer Size:' num2str(nnHidden) ', Training Function:'...
+disp('   [+++] Starting Neural Network Training');
+disp(['      [+] Parameters: Hidden Layer Size:' num2str(nnHidden) ', Training Function:'...
         trainFcn]);
 t0 = clock;
 
@@ -56,7 +55,7 @@ net.outputs{2}.processFcns = {};
 
 % Train the Network
 [net,tr] = train(net,acf,d);
-disp('   [+] Neural Network Training Complete');
+disp('   [-] Neural Network Training Complete');
 
 % Test the Network
 y = net(acf);
@@ -90,7 +89,7 @@ performance = perform(net,d,y);
 % Generate nn function - Matlab
 disp('   [+] Generating Neural Network: nn_dls');
 genFunction(net,'nn_dls','MatrixOnly','yes', 'ShowLinks','no');
-disp('   [+] Neural Network Generated');
+disp('   [-] Neural Network Generated');
 
 % Export NN weights and biases
 wb = formwb(net, net.b, net.iw, net.lw);
@@ -119,6 +118,6 @@ disp('   [+] File Saved: nn_dls/nn_dls_data/b2.csv');
 t1 = clock;
 deltaT = etime(t1,t0);
 [h, m, s] = sec2time(deltaT);
-disp('[+++] Neural Network Training Complete');
-disp(['[+++] Total Duration of Training DLS NN = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
+disp('   [+++] Neural Network Training Complete');
+disp(['   [+++] Total Duration of Training DLS NN = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's']);
 warning on;

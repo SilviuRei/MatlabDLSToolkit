@@ -1,5 +1,20 @@
-function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3v2(nume,theta,indref,lambda,tcelsius,eta,a0start,a0min,a0max,a1start,a1min,a1max,control,tip, dispMode);
-% 
+function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3v2(psdts,theta,indref,...
+    lambda,tcelsius,eta,a0start,a0min,a0max,a1start,a1min,a1max,control,...
+    tip, dispMode)
+%--------------------------------------------------------------------------
+% Version 20171225, Silviu Rei based on chi2dlssq3 by Dan Chicea
+% function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3v2(nume,theta,indref,...
+%    lambda,tcelsius,eta,a0start,a0min,a0max,a1start,a1min,a1max,control,...
+%    tip, dispMode)
+%
+%   Input:
+%
+%   Output:
+%
+%   Example:
+%
+%--------------------------------------------------------------------------
+%  Original Comment by Dan Chicea
 %   Functia  chi2dlslsq1 citeste fisierul nume.psd in care sunt perechile de tip
 %   frecventa si power amplitude.
 %       dmic - deplasarea transversala a detectorului
@@ -25,7 +40,7 @@ function [diam,a0,a1,chi2min,exitflag]=chi2dlslsq3v2(nume,theta,indref,lambda,tc
 %
 % Apelare:
 % [diam,a0,a1,chi2min,exitflag]=chi2dlslsq2(nume,teta,indref,lambda,tcelsius,a0start,a0min,a0max,a1start,a1min,a1max,control,tip);
-%
+%--------------------------------------------------------------------------
 
 lambda=1.e-9*lambda;
 figureNumber = 10;
@@ -43,13 +58,14 @@ if dispMode == 1
 end
 %
 t0=clock;   %marcheaza inceputul executiei
-nume_inn=[nume,'.fps'];
-tmp=load(nume_inn);
-[n,l]=size(tmp);
+%nume_inn=[nume,'.fps'];
+%tmp=load(nume_inn);
+tmp=psdts;
+[n,~]=size(tmp);
 f=tmp(:,1);         %extrage frecventa
 psexp=tmp(:,2);     %extrage amplitudinile puterii exp
 %teta=atan(dmic/dist);   %unghiul la care face determinarile
-pscalc=zeros(n,1);
+%pscalc=zeros(n,1);
 %
 %   pregateste datele de intrare
 %
@@ -63,11 +79,7 @@ argmax=[a0max, a1max];    %upper bounds
 options=optimset('MaxFunEvals',25000,'MaxIter',10000,'TolX',1.e-10,'TolFun',1.e-14, 'Display', 'off');
 %
 %keyboard;
-[arg,resnorm,residual,exitflag,output]=lsqcurvefit(@florentz2,arg0,f,psexp,argmin,argmax,options);
-if dispMode == 1
-	exitflag
-	output
-end
+[arg,resnorm,~,exitflag,~]=lsqcurvefit(@florentz2,arg0,f,psexp,argmin,argmax,options);
 %
 %keyboard;
 %
@@ -78,7 +90,7 @@ chi2min=(1/n)*sum((psexp-pscalc).^2);
 %
 if control >=1  %vrea afisat pe ecran
     if dispMode == 1
-        figure(10);
+        figure(figureNumber);
     elseif dispMode == 0
         figureNumber = figure('visible', 'off');
     end
@@ -90,20 +102,16 @@ if control >=1  %vrea afisat pe ecran
     ylabel('PS, a.u.')
 end
 %
-if control >= 2 %vrea figura salvata pe disc
-    format('long');
-    numeg=['chi2dlssq-d-', nume,'-a0-',num2str(a0),'-a1-',num2str(a1)];
-    saveas(figureNumber,[numeg,'.',tip],tip);
-end
+
 %
 % salveaza datele ca matrice, f, psexp, pscalc
 %
-rez(:,1)=f;
-rez(:,2)=psexp;
-rez(:,3)=pscalc;
-numeout=[nume,'.rez'];
-save(numeout,'rez','-ascii');
-%keyboard;
+%rez(:,1)=f;
+%rez(:,2)=psexp;
+%rez(:,3)=pscalc;
+%numeout=[nume,'.rez'];
+%save(numeout,'rez','-ascii');
+
 %
 %  calculeaza valoarea diametrului particulelor
 %
@@ -116,6 +124,13 @@ diam=2*raza;
 %
 % That is all, write the result
 %
+
+if control >= 2 %vrea figura salvata pe disc
+    format('long');
+    numeg=['plot_ps_fit-d-', num2str(diam),'-a0-',num2str(a0),'-a1-',num2str(a1)];
+    saveas(figureNumber,[numeg,'.',tip],tip);
+end
+
 if dispMode == 1
 	disp('________________________________________')
 	disp(' ');

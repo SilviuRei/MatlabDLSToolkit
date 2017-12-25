@@ -1,5 +1,7 @@
 function [acf,lags]=analizor_autocor2(name,x,steps,fs,extgr,indsave,dispMode)
-%
+%--------------------------------------------------------------------------
+% Version 20171225, Silviu Rei based on analizor_autocor_2 by Dan Chicea
+%--------------------------------------------------------------------------
 %   Functia citeste in vectorul x fisierul nume.ext_fis; nume este fara extensie,
 % de tipul 'proba'. Fisierul trebuie sa contina o coloana de numere.
 %   Functia returneaza matricea cu doua coloane, timp  si functia de
@@ -18,7 +20,7 @@ function [acf,lags]=analizor_autocor2(name,x,steps,fs,extgr,indsave,dispMode)
 %   Face grafice si salveaza fisier pe disc numai daca indsav >=2
 %   Aceasta versiune este pt a functiona in batch mode apelata din
 %   load_acr1
-%
+%--------------------------------------------------------------------------
 if dispMode == 1
     disp(['[+++]Analyzing time series: ' name])
     disp(['   [+] Sampling Frequency: ' num2str(fs) 'Hz']); 
@@ -29,7 +31,7 @@ end
 %x=x-xmed;
 %
 figNumber = 80;
-[acf, lags, bounds]=autocorr(x, steps, [], 2);     %transformata bruta
+[acf, lags, ~]=autocorr(x, steps, [], 2);     %transformata bruta
 dt=1/fs;        %intervalul dintre doua valori
 lags=lags*dt;
 %
@@ -67,6 +69,6 @@ if indsave == 2
     ylabel('a.u.');
     xmax=max(lags);
     axis([0, xmax, -0.2, 1]);
-    saveas(figNumber, [name,'-accr'],extgr);
-    disp(['   [+] Saving File ' name '-accr.' extgr]);
+    saveas(figNumber, ['plot_acf_' name],extgr);
+    disp(['   [+] Saving File plot_acf_' name '.' extgr]);
 end %if

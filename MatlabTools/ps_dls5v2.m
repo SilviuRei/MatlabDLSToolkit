@@ -1,4 +1,4 @@
-function [buf1]=ps_dls5(nume,frecv,nr1,nr2,tip,opt, dispMode)
+function [psdts]=ps_dls5v2(name, mTs,frecv,nr1,nr2,tip,opt, dispMode)
 %--------------------------------------------------------------------------
 %   [2017.12.22] S.Rei - added save of PS figure (fig2)
 %
@@ -19,18 +19,19 @@ function [buf1]=ps_dls5(nume,frecv,nr1,nr2,tip,opt, dispMode)
 %   Fata de versiunea 4 nu pune in fisierul de iesire primele nr1 si
 %   ultumele nr2 perechi de valori
 %
-numefis=[nume '.ext'];
+%numefis=[nume '.ext'];
 figureNumber1=1;
 figureNumber2=2;
-a=load(numefis);
-[m,m1]=size(a);
+%a=load(numefis);
+%mTs=load(numfis);
+[m,~]=size(mTs);
 if dispMode == 1
 	disp(['Fisierul are ', int2str(m), ' inregistrari']);
 end
 %
 % in vectorul a coloana datele, calculeaza FT
 %
-tmp=fft(a);         %transformat Fourier
+tmp=fft(mTs);         %transformat Fourier
 n=floor(m/2)+1;     %numarul de puncte de interes
 ps=tmp(1:n).*conj(tmp(1:n))./m; %din exemplu se imparte la nr total de inregistrari
 f=(frecv*(1:n)./m)';   %abscisele
@@ -38,7 +39,7 @@ f=(frecv*(1:n)./m)';   %abscisele
 % extrage portiunea dorita
 %
 buf=[f,ps];     %matricea cu coloana f si colana ps
-buf1=buf(nr1+1:n-nr2,:);
+psdts=buf(nr1+1:n-nr2,:);
 %
 if opt>=1
     numefig=['Power Spectrum Logarithmic Scale',newline,'Frequency=',num2str(frecv), ' Hz'];
@@ -47,7 +48,7 @@ if opt>=1
     elseif dispMode == 0
         figureNumber1=figure('visible','off');
     end
-    loglog(buf1(:,1),buf1(:,2),'-');
+    loglog(psdts(:,1),psdts(:,2),'-');
     title(numefig);
     xlabel('f, Hz');
     ylabel('PS');
@@ -58,7 +59,7 @@ if opt>=1
     elseif dispMode == 0
         figureNumber2=figure('visible','off');
     end
-    plot(buf1(:,1),buf1(:,2),'-');
+    plot(psdts(:,1),psdts(:,2),'-');
     title(numefig);
     xlabel('f, Hz');
     ylabel('PS');
@@ -66,13 +67,13 @@ end
 %
 % scrie datele daca este cazul
 %
-numefisfig1=[nume,'-ps-loglog'];
-numefisfig2=[nume,'-ps'];
+numefisfig1=['plot_ps-loglog-' name];
+numefisfig2=['plot_ps-' name];
 %
-if opt >= 0
-    numefisout=[nume,'.fps'];
-    save(numefisout,'buf1','-ascii');
-end
+%if opt >= 0
+%    numefisout=['ps_' name '.fps'];
+%    save(numefisout,'psdts','-ascii');
+%end
 %
 if opt >=2
     saveas(figureNumber1,numefisfig1,tip);

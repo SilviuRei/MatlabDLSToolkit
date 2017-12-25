@@ -1,7 +1,7 @@
-function [t,x,a0,a1]=gents37(nume, diam, theta, lambda, indref,eta, tcelsius, fs, nt, opt)
-%-------------------------------------------------------------------------------
+function [t,x,a0,a1]=gents37(nume,diam,theta,lambda,indref,eta,tcelsius,fs,nt,opt)
+%--------------------------------------------------------------------------
 % Version 20171118, Silviu Rei based on gents36 by Dan Chicea
-% [t,x,a0,a1]=gents36(nume, diam, theta, lambda, indref,tcelsius, fs, nt, opt)
+% [t,x,a0,a1]=gents36(nume,diam,theta,lambda,indref,eta,tcelsius,fs,nt,opt)
 % 
 %   The function generates time series for DLS
 %	Input:
@@ -11,15 +11,16 @@ function [t,x,a0,a1]=gents37(nume, diam, theta, lambda, indref,eta, tcelsius, fs
 %       lambda      = laser wavelength in nm
 %       indref      = refractive index of the solvent
 %       eta         = viscosity of the solvent
+%       tcelsius    = temperature in C
 %       fs          = acquisition frequency
 %       nt          = number of samples in the series
-%       opt         = if 1 save the time series in a file
+%       opt         = if 1, save the time series in a file
 %	Output:
 %       t           = time axis of the time series
 %       x           = time series
 %       a0, a1      = Lorentz parameters       
 %	Example:
-%		[t,x,a0,a1]=gents37('water', 5, pi/2, 633, 1.333,20, 16000, 32768, 1);
+%		[t,x,a0,a1]=gents37('water',5,pi/2,lambda,indref,eta,tcelsius,fs,nt,1);
 %-------------------------------------------------------------------------------
 % Original Dan Chicea Comments:
 %
@@ -29,19 +30,19 @@ function [t,x,a0,a1]=gents37(nume, diam, theta, lambda, indref,eta, tcelsius, fs
 %   in radiani, de lumina cu lungimea de unda lambda, in nm, in apa la
 %   temperatura tc, in grade Celsius.
 %
-%  Seria este in variabila x, generata cu frecventa (de achizitie) fs,
-%  folosind nf frecvente si nt valori in seria de timp finala.
+%   Seria este in variabila x, generata cu frecventa (de achizitie) fs,
+%   folosind nf frecvente si nt valori in seria de timp finala.
 %  
-%  Daca opt este 1 salveaza in fisierul nume,
-%  de felul 'd:folder\nume-diam-fs-nf-nt.ext' 
+%   Daca opt este 1 salveaza in fisierul nume,
+%   de felul 'd:folder\nume-diam-fs-nf-nt.ext' 
 %
-% Functia returneaza doi vectori, unul t cu valoarea timpului si celalalt x, cu seria
-% temporala
+%   Functia returneaza doi vectori, unul t cu valoarea timpului si celalalt x, cu seria
+%   temporala
 %
-% calculeaza valorile necesare pentru parametrii functiei Lorentz
+%   calculeaza valorile necesare pentru parametrii functiei Lorentz
 %
-% fata de versiunea 1 ridica la patrat intrucat valorile inregistrare in experiment sunt
-% pozitive
+%   fata de versiunea 1 ridica la patrat intrucat valorile inregistrare in experiment sunt
+%   pozitive
 %
 %   fata de versiunea 2 tine cont si de indiele de refractie in calculul
 %   lui K, ca si chi2dlsq2 !!!
@@ -52,16 +53,16 @@ function [t,x,a0,a1]=gents37(nume, diam, theta, lambda, indref,eta, tcelsius, fs
 %   34 nu initializeaza generatorul de nr. aleatoare. acesta este
 %   initializat extern inaite de apelarea in serie a lui gents3
 %
-% apelare:
-% [t,x]=gents32('FeO4-100', 100, 0.7854, 633, 1.5, 20, 2000, 100, 1000, 1)
+%   apelare:
+%   [t,x]=gents32('FeO4-100', 100, 0.7854, 633, 1.5, 20, 2000, 100, 1000, 1)
 %
-% v 35 revine dupa rezultatele eronate pe care le da procedure DLS, cu
-% diametre prea mici si renunta la schema cu radicalul si patratul
-% in plus calculeaza ci florentz2 ca si programul de fitare
+%   v 35 revine dupa rezultatele eronate pe care le da procedure DLS, cu
+%   diametre prea mici si renunta la schema cu radicalul si patratul
+%   in plus calculeaza ci florentz2 ca si programul de fitare
 %
-% v36 reia raducalul si patratul la ampltudine dar cu florentz2.
-% calculeaza singur numarul de frecvente sa fie comparabil cu cel din FS real la
-% numarul de valori din sir.
+%   v36 reia raducalul si patratul la ampltudine dar cu florentz2.
+%   calculeaza singur numarul de frecvente sa fie comparabil cu cel din FS real la
+%   numarul de valori din sir.
 %
 %-----------------------------------------------------------------------------------
 a0=10;       %alegem arbitrar; l-am micsorat
