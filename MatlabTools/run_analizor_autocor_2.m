@@ -1,4 +1,4 @@
-function [acf,tlags]=run_analizor_autocor_2(tsName,x,steps,fs,extgr,indsave,bS,eS,sS,i1,i2,istep,dispMode)
+function [acf,tlags]=run_analizor_autocor_2(tsName,x,steps,fs,extgr,indsave,i1,i2,istep,dispMode)
 %--------------------------------------------------------------------------
 % Version 20171225, Silviu Rei based on run_analizor_autocor_2 by Dan Chicea
 %--------------------------------------------------------------------------
@@ -31,7 +31,6 @@ waitbarHandle = waitbar(0,['Computing Autocorrelation...' ...
         newline 'Step:'  ...
         newline 'Time Left =' ...
         newline 'Progress: 0%']);
-dM = bS:sS:eS;
 for i=i1:istep:i2
     tic
     disp(['[+++] Step ' num2str(k) ' out of ' num2str(numSteps)...
@@ -40,7 +39,7 @@ for i=i1:istep:i2
             newline 'Step: ' num2str(k) ' out of ' num2str(numSteps)  ...
             newline 'Time Left = ' num2str(h) 'h ' num2str(m) 'm ' num2str(s) 's' ...
             newline 'Progress: ' num2str(100*(k-1)/numSteps) ' %']);
-    seriesName = [num2str(dM(i)) '-' tsName ];
+    seriesName = [num2str(i) '-' tsName ];
     [acf(:,k),lags]=analizor_autocor2(seriesName,x(:,i),steps,fs,extgr,indsave,dispMode);
     deltat = toc;
     timeLeft = deltat*(numSteps-k);

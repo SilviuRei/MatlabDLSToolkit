@@ -69,6 +69,6 @@ if indsave == 2
     ylabel('a.u.');
     xmax=max(lags);
     axis([0, xmax, -0.2, 1]);
-    saveas(figNumber, ['plot_acf_' name],extgr);
+    saveas(figNumber, ['plot_acf_' name '.png'],extgr);
     disp(['   [+] Saving File plot_acf_' name '.' extgr]);
 end %if

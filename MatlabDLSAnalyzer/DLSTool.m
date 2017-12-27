@@ -22,7 +22,7 @@ function varargout = DLSTool(varargin)
 
 % Edit the above text to modify the response to help DLSTool
 
-% Last Modified by GUIDE v2.5 25-Dec-2017 13:16:44
+% Last Modified by GUIDE v2.5 27-Dec-2017 17:43:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,6 +68,7 @@ set(handles.h_lambda, 'String', '');
 set(handles.h_eta, 'String', '');
 set(handles.h_tcelsius, 'String', '');
 set(handles.h_theta, 'String', '');
+set(handles.h_thetadeg, 'String', '');
 set(handles.h_a0start, 'String', '');
 set(handles.h_a0min, 'String', '');
 set(handles.h_a0max, 'String', '');
@@ -102,6 +103,7 @@ set(handles.h_NNFitStatus, 'String', 'Status: Ready');
 set(handles.h_NNFitFilename, 'String', '');
 set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
+set(handles.h_ErrNNDLSFilenameRef, 'String','');
 set(handles.h_ErrNNDLSDisplay, 'Value', 2);
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
 set(handles.h_ParametersLogFilename, 'String', '');
@@ -121,6 +123,17 @@ set(handles.h_NNOptimizerStatus, 'String', 'Status: Ready');
 set(handles.h_NNOptimizerDisplay, 'Value', 2);
 set(handles.h_NNOptimizerFilename, 'String', '');
 set(handles.h_averagingSteps, 'String', '');
+set(handles.h_DLSFitIndex1, 'String', '');
+set(handles.h_DLSFitIndex2, 'String', '');
+set(handles.h_DLSFitIStep, 'String', '');
+set(handles.h_NNFitIndex1, 'String', '');
+set(handles.h_NNFitIndex2, 'String', '');
+set(handles.h_NNFitIStep, 'String', '');
+set(handles.h_AutocorrI1, 'String', '');
+set(handles.h_AutocorrI2, 'String', '');
+set(handles.h_AutocorrIStep, 'String', '');
+set(handles.h_TSGenerateAlgo, 'Value', 1);
+
 
 
 
@@ -549,7 +562,7 @@ default_solvent_nr       = 1;
 default_fs               = 16000;
 default_nt               = 32768;
 default_nnHidden         = 220;
-default_autocorrlags     = 999;
+default_autocorrlags     = 599;
 
 [dMin,dMax,dStep,indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,...
             a0max,a1start,a1min,a1max,fs,nt,nnHidden,autocorrLags,trainNNFlag]=...
@@ -565,6 +578,7 @@ set(handles.h_lambda, 'String', num2str(lambda));
 set(handles.h_eta, 'String', num2str(eta));
 set(handles.h_tcelsius, 'String', num2str(tcelsius));
 set(handles.h_theta, 'String', num2str(theta));
+set(handles.h_thetadeg, 'String', num2str(default_theta));
 set(handles.h_a0start, 'String', num2str(a0start));
 set(handles.h_a0min, 'String', num2str(a0min));
 set(handles.h_a0max, 'String', num2str(a0max));
@@ -599,6 +613,7 @@ set(handles.h_NNFitStatus, 'String', 'Status: Ready');
 set(handles.h_NNFitFilename, 'String', '');
 set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
+set(handles.h_ErrNNDLSFilenameRef, 'String','');
 set(handles.h_ErrNNDLSDisplay, 'Value', 2);
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
 set(handles.h_ParametersLogFilename, 'String', 'parametersLog.txt');
@@ -618,6 +633,16 @@ set(handles.h_NNOptimizerStatus, 'String', 'Status: Ready');
 set(handles.h_NNOptimizerDisplay, 'Value', 2);
 set(handles.h_NNOptimizerFilename, 'String', '');
 set(handles.h_averagingSteps, 'String', '10');
+set(handles.h_DLSFitIndex1, 'String', '1');
+set(handles.h_DLSFitIndex2, 'String', '25');
+set(handles.h_DLSFitIStep, 'String', '1');
+set(handles.h_NNFitIndex1, 'String', '1');
+set(handles.h_NNFitIndex2, 'String', '25');
+set(handles.h_NNFitIStep, 'String', '1');
+set(handles.h_AutocorrI1, 'String', '1');
+set(handles.h_AutocorrI2, 'String', '100');
+set(handles.h_AutocorrIStep, 'String', '1');
+set(handles.h_TSGenerateAlgo, 'Value', 1);
  
 
 % --- Executes on button press in pushbutton2.
@@ -697,7 +722,7 @@ end
 
 set(handles.h_NightRunDLSFitSizeStatus, 'String',      'In Progress');
 dm=dMin:dStep:dMax;
-[dFitDLS,a0FitDLS,a1FitDLS,~] = batchDLSFitFindA0A1Size(mTS, dm, ...
+[dFitDLS,a0FitDLS,a1FitDLS,~] = batchDLSFitFindA0A1Size(mTS, ...
     1, (dMax-dMin)/dStep+1, 1, fs, theta, lambda, indref, eta, tcelsius, ...
     a0start, a0min, a0max, a1start, a1min, a1max, dispMode, cleanMode);
 set(handles.h_NightRunDLSFitSizeStatus, 'String',      'Complete');
@@ -721,7 +746,7 @@ end
 
 set(handles.h_NightRunAutocorrStatus, 'String',        'In Progress');
 [acf,tlags]=run_analizor_autocor_2(dirName,mTS,autocorrLags,fs,'png',indsave,...
-    dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,dispMode);
+    1,(dMax-dMin)/dStep+1,1,dispMode);
 set(handles.h_NightRunAutocorrStatus, 'String',        'Complete');
 
 dispMode=1;
@@ -756,7 +781,7 @@ if dispMode == 2
 end
 
 set(handles.h_NightRunNNFitStatus, 'String',           'In Progress');
-[dFitNN] = dlsNNFitNoACF (dirName,acf,dMin,dMax,dStep,1,...
+[dFitNN] = dlsNNFitNoACF (dirName,acf,1,...
     (dMax-dMin)/dStep+1,1,autocorrLags,nnHidden,fs,dispMode);
 set(handles.h_NightRunNNFitStatus, 'String',           'Complete');
 
@@ -788,7 +813,7 @@ dMax=string(get(handles.h_dMax, 'String'));
 dStep=string(get(handles.h_dStep, 'String'));
 lambda=string(get(handles.h_lambda, 'String'));
 tcelsius=string(get(handles.h_tcelsius, 'String'));
-theta=string(get(handles.h_theta, 'String'));
+thetadeg=string(get(handles.h_thetadeg, 'String'));
 solvent=get(handles.h_solvent,'String');
 solvent=string(solvent{get(handles.h_solvent,'Value')});
 a0min=string(get(handles.h_a0min, 'String'));
@@ -810,7 +835,7 @@ bufferParametersLogFile=strcat('Particle Minimum Diameter (nm)=',dMin,'\n', ...
      'Solvent=',solvent,'\n',...
      'Light Wavelength (nm)=',lambda,'\n',...
      'Temperature (C)=',tcelsius,'\n',...
-     'Scattering Angle (deg)=',theta,'\n',...
+     'Scattering Angle (deg)=',thetadeg,'\n',...
      'Lorentz Parameter a0 min=',a0min,'\n',...
      'Lorentz Parameter a0 max=',a0max,'\n',...
      'Lorentz Parameter a0 start=',a0start,'\n',...
@@ -962,6 +987,7 @@ set(handles.h_lambda, 'String', '');
 set(handles.h_eta, 'String', '');
 set(handles.h_tcelsius, 'String', '');
 set(handles.h_theta, 'String', '');
+set(handles.h_thetadeg, 'String', '');
 set(handles.h_a0start, 'String', '');
 set(handles.h_a0min, 'String', '');
 set(handles.h_a0max, 'String', '');
@@ -996,6 +1022,7 @@ set(handles.h_NNFitStatus, 'String', 'Status: Ready');
 set(handles.h_NNFitFilename, 'String', '');
 set(handles.h_ErrNNDLSFilenameNN, 'String' ,'');
 set(handles.h_ErrNNDLSFilenameDLS, 'String', '');
+set(handles.h_ErrNNDLSFilenameRef, 'String','');
 set(handles.h_ErrNNDLSDisplay, 'Value', 2);
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ready');
 set(handles.h_ParametersLogFilename, 'String', '');
@@ -1015,6 +1042,16 @@ set(handles.h_NNOptimizerStatus, 'String', 'Status: Ready');
 set(handles.h_NNOptimizerDisplay, 'Value', 2);
 set(handles.h_NNOptimizerFilename, 'String', '');
 set(handles.h_averagingSteps, 'String', '');
+set(handles.h_DLSFitIndex1, 'String', '');
+set(handles.h_DLSFitIndex2, 'String', '');
+set(handles.h_DLSFitIStep, 'String', '');
+set(handles.h_NNFitIndex1, 'String', '');
+set(handles.h_NNFitIndex2, 'String', '');
+set(handles.h_NNFitIStep, 'String', '');
+set(handles.h_AutocorrI1, 'String', '');
+set(handles.h_AutocorrI2, 'String', '');
+set(handles.h_AutocorrIStep, 'String', '');
+set(handles.h_TSGenerateAlgo, 'Value', 1);
 
 
 
@@ -1251,6 +1288,9 @@ a1min=str2double(get(handles.h_a1min, 'String'));
 a1max=str2double(get(handles.h_a1max, 'String'));
 dispMode=get(handles.h_DLSFitDisplay, 'Value');
 cleanMode=get(handles.h_DLSFitClean, 'Value');
+index1=str2double(get(handles.h_DLSFitIndex1, 'String'));
+index2=str2double(get(handles.h_DLSFitIndex2, 'String'));
+istep=str2double(get(handles.h_DLSFitIStep, 'String'));
 if dispMode == 2
     dispMode = 0;
 end
@@ -1260,8 +1300,8 @@ end
 dm=dMin:dStep:dMax;
 
 set(handles.h_DLSFitStatus, 'String', 'Status: In Progress');
-[~,~,~,~] = batchDLSFitFindA0A1Size(mTS, dm, ...
-    1, (dMax-dMin)/dStep+1, 1, fs, theta, lambda, indref, eta, tcelsius, ...
+[~,~,~,~] = batchDLSFitFindA0A1Size(mTS, ...
+    index1, index2, istep, fs, theta, lambda, indref, eta, tcelsius, ...
     a0start, a0min, a0max, a1start, a1min, a1max, dispMode, cleanMode);
 set(handles.h_DLSFitStatus, 'String', 'Status: Complete');
     
@@ -1392,13 +1432,16 @@ dMax=str2double(get(handles.h_dMax, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
 dispMode=get(handles.h_AutocorrDisplay, 'Value');
 autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
+i1=str2double(get(handles.h_AutocorrI1, 'String'));
+i2=str2double(get(handles.h_AutocorrI2, 'String'));
+istep=str2double(get(handles.h_AutocorrIStep, 'String'));
 if dispMode == 2
     dispMode = 0;
 end
 
 set(handles.h_AutocorrStatus, 'String', 'Status: In Progress');
 [~,~]=run_analizor_autocor_2(filename,mTS,autocorrLags,fs,'png',indsave,...
-    dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,dispMode);
+    i1,i2,istep,dispMode);
 set(handles.h_AutocorrStatus, 'String', 'Status: Complete');
     
 cd(currentPath);
@@ -1566,18 +1609,18 @@ mTS = load(ExPath);
 cd(filepath);
 
 fs=str2double(get(handles.h_fs, 'String'));
-dMin=str2double(get(handles.h_dMin, 'String'));
-dMax=str2double(get(handles.h_dMax, 'String'));
-dStep=str2double(get(handles.h_dStep, 'String'));
 nnHidden=str2double(get(handles.h_nnHidden, 'String'));
 dispMode=get(handles.h_NNFitDisplay, 'Value');
 autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
+index1=str2double(get(handles.h_NNFitIndex1, 'String'));
+index2=str2double(get(handles.h_NNFitIndex2, 'String'));
+istep=str2double(get(handles.h_NNFitIStep, 'String'));
 if dispMode == 2
     dispMode = 0;
 end
 
 set(handles.h_NNFitStatus, 'String', 'Status: In Progress');
-[~] = dlsNNFit (filename,mTS,dMin,dMax,dStep,1,(dMax-dMin)/dStep+1,1,autocorrLags,nnHidden,fs,dispMode);
+[~] = dlsNNFit (filename,mTS,index1,index2,istep,autocorrLags,nnHidden,fs,dispMode);
 set(handles.h_NNFitStatus, 'String', 'Status: Complete');
     
 cd(currentPath);
@@ -1591,9 +1634,11 @@ function h_ErrNNDLSStart_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 ExPath = get(handles.h_ErrNNDLSFilenameDLS, 'String');
 dFitDLS = load(ExPath);
-
 ExPath = get(handles.h_ErrNNDLSFilenameNN, 'String');
 dFitNN = load(ExPath);
+ExPath = get(handles.h_ErrNNDLSFilenameRef, 'String');
+dFitRef = load(ExPath);
+
 currentPath = pwd;
 [filepath,filename,~] = fileparts(ExPath);
 cd(filepath);
@@ -1608,7 +1653,7 @@ end
 d=dMin:dStep:dMax;
 
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: In Progress');
-[~,~,~,~]=estimateErrFitDLSVsNN(d,dFitDLS,dFitNN,'png',dispMode);
+[~,~,~,~]=estimateErrFitDLSVsNN(dFitRef,dFitDLS,dFitNN,'png',dispMode);
 set(handles.h_ErrNNDLSStatus, 'String', 'Status: Complete');
 
 cd(currentPath);
@@ -1695,7 +1740,7 @@ dMax=string(get(handles.h_dMax, 'String'));
 dStep=string(get(handles.h_dStep, 'String'));
 lambda=string(get(handles.h_lambda, 'String'));
 tcelsius=string(get(handles.h_tcelsius, 'String'));
-theta=string(get(handles.h_theta, 'String'));
+thetadeg=string(get(handles.h_thetadeg, 'String'));
 solvent=get(handles.h_solvent,'String');
 solvent=string(solvent{get(handles.h_solvent,'Value')});
 a0min=string(get(handles.h_a0min, 'String'));
@@ -1720,7 +1765,7 @@ bufferParametersLogFile=strcat('Particle Minimum Diameter (nm)=',dMin,'\n', ...
      'Solvent=',solvent,'\n',...
      'Light Wavelength (nm)=',lambda,'\n',...
      'Temperature (C)=',tcelsius,'\n',...
-     'Scattering Angle (deg)=',theta,'\n',...
+     'Scattering Angle (deg)=',thetadeg,'\n',...
      'Lorentz Parameter a0 min=',a0min,'\n',...
      'Lorentz Parameter a0 max=',a0max,'\n',...
      'Lorentz Parameter a0 start=',a0start,'\n',...
@@ -1939,3 +1984,276 @@ function h_CommandLogStop_Callback(hObject, eventdata, handles)
 diary off;
 disp(['[+++] Command Logging Stopped. Log Saved : ' string(get(handles.h_CommandLogFilename, 'String'))]);
 msgbox('Command Logging Stopped\nLog Saved');
+
+
+
+function h_thetadeg_Callback(hObject, eventdata, handles)
+% hObject    handle to h_thetadeg (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_thetadeg as text
+%        str2double(get(hObject,'String')) returns contents of h_thetadeg as a double
+thetadeg=str2double(get(handles.h_thetadeg, 'String'));
+thetarad=thetadeg*pi/180;
+set(handles.h_theta, 'String', num2str(thetarad));
+
+% --- Executes during object creation, after setting all properties.
+function h_thetadeg_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_thetadeg (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_NNFitIndex1_Callback(hObject, eventdata, handles)
+% hObject    handle to h_NNFitIndex1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_NNFitIndex1 as text
+%        str2double(get(hObject,'String')) returns contents of h_NNFitIndex1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_NNFitIndex1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_NNFitIndex1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_NNFitIndex2_Callback(hObject, eventdata, handles)
+% hObject    handle to h_NNFitIndex2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_NNFitIndex2 as text
+%        str2double(get(hObject,'String')) returns contents of h_NNFitIndex2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_NNFitIndex2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_NNFitIndex2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_NNFitIStep_Callback(hObject, eventdata, handles)
+% hObject    handle to h_NNFitIStep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_NNFitIStep as text
+%        str2double(get(hObject,'String')) returns contents of h_NNFitIStep as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_NNFitIStep_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_NNFitIStep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_DLSFitIndex1_Callback(hObject, eventdata, handles)
+% hObject    handle to h_DLSFitIndex1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_DLSFitIndex1 as text
+%        str2double(get(hObject,'String')) returns contents of h_DLSFitIndex1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_DLSFitIndex1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_DLSFitIndex1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_DLSFitIndex2_Callback(hObject, eventdata, handles)
+% hObject    handle to h_DLSFitIndex2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_DLSFitIndex2 as text
+%        str2double(get(hObject,'String')) returns contents of h_DLSFitIndex2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_DLSFitIndex2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_DLSFitIndex2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_DLSFitIStep_Callback(hObject, eventdata, handles)
+% hObject    handle to h_DLSFitIStep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_DLSFitIStep as text
+%        str2double(get(hObject,'String')) returns contents of h_DLSFitIStep as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_DLSFitIStep_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_DLSFitIStep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in h_ErrNNDLSBrowseFilenameRef.
+function h_ErrNNDLSBrowseFilenameRef_Callback(hObject, eventdata, handles)
+% hObject    handle to h_ErrNNDLSBrowseFilenameRef (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[FileName,FilePath ]= uigetfile('*.*','Select DLS Sizes File');
+ExPath = fullfile(FilePath, FileName);
+set(handles.h_ErrNNDLSStatus, 'String', 'Status: Ref File Selected');
+set(handles.h_ErrNNDLSFilenameRef, 'String', ExPath);
+
+
+
+function h_AutocorrI1_Callback(hObject, eventdata, handles)
+% hObject    handle to h_AutocorrI1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_AutocorrI1 as text
+%        str2double(get(hObject,'String')) returns contents of h_AutocorrI1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_AutocorrI1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_AutocorrI1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_AutocorrI2_Callback(hObject, eventdata, handles)
+% hObject    handle to h_AutocorrI2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_AutocorrI2 as text
+%        str2double(get(hObject,'String')) returns contents of h_AutocorrI2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_AutocorrI2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_AutocorrI2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function h_AutocorrIStep_Callback(hObject, eventdata, handles)
+% hObject    handle to h_AutocorrIStep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_AutocorrIStep as text
+%        str2double(get(hObject,'String')) returns contents of h_AutocorrIStep as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_AutocorrIStep_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_AutocorrIStep (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in h_TSGenerateAlgo.
+function h_TSGenerateAlgo_Callback(hObject, eventdata, handles)
+% hObject    handle to h_TSGenerateAlgo (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns h_TSGenerateAlgo contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from h_TSGenerateAlgo
+
+
+% --- Executes during object creation, after setting all properties.
+function h_TSGenerateAlgo_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_TSGenerateAlgo (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function pushbuttonClearInitValues_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pushbuttonClearInitValues (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called

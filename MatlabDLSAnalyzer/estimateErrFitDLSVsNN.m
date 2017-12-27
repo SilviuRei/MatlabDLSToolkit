@@ -40,9 +40,9 @@ if dispMode==1
 elseif dispMode==0
     figureNumber1 = figure('visible','off');
 end
-plot(d,errabsFitDLS,'b');
+plot(errabsFitDLS,'b');
 title("Absolute Error Fit DLS");
-xlabel("Particle Size (nm)");
+xlabel("Time Series Index");
 ylabel("Abs Err (nm)");
 
 if dispMode==1
@@ -50,9 +50,9 @@ if dispMode==1
 elseif dispMode==0
     figureNumber2 = figure('visible','off');
 end
-plot(d,errabsFitNN,'r');
+plot(errabsFitNN,'r');
 title("Absolute Error Fit NN");
-xlabel("Particle Size (nm)");
+xlabel("Time Series Index");
 ylabel("Abs Err (nm)");
 
 if dispMode==1
@@ -60,9 +60,9 @@ if dispMode==1
 elseif dispMode==0
     figureNumber3 = figure('visible','off');
 end
-plot(d,errelFitDLS,'b');
+plot(errelFitDLS,'b');
 title("Relative Error Fit DLS");
-xlabel("Particle Size (nm)");
+xlabel("Time Sries Index");
 ylabel("Rel Err (%)");
 
 if dispMode==1
@@ -70,9 +70,9 @@ if dispMode==1
 elseif dispMode==0
     figureNumber4 = figure('visible','off');
 end
-plot(d,errelFitNN,'r');
+plot(errelFitNN,'r');
 title("Relative Error Fit NN");
-xlabel("Particle Size (nm)");
+xlabel("Time Series Index");
 ylabel("Rel Err(%)");
 
 saveas(figureNumber1,'plot_dlsFitErrAbs',typeG);
