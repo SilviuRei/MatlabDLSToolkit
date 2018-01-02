@@ -4,22 +4,23 @@ function [t,x,a0,a1]=gents37(nume,diam,theta,lambda,indref,eta,tcelsius,fs,nt,op
 % [t,x,a0,a1]=gents36(nume,diam,theta,lambda,indref,eta,tcelsius,fs,nt,opt)
 % 
 %   The function generates time series for DLS
-%	Input:
+%   
+%   Input:
 %       nume        = name of the TS
 %       diam        = diameter of particles in nm
 %       theta       = measuring ange in RAD
 %       lambda      = laser wavelength in nm
 %       indref      = refractive index of the solvent
-%       eta         = viscosity of the solvent
+%       eta         = viscosity of the solvent (Nxm/s2)
 %       tcelsius    = temperature in C
-%       fs          = acquisition frequency
+%       fs          = acquisition frequency (Hz)
 %       nt          = number of samples in the series
 %       opt         = if 1, save the time series in a file
-%	Output:
+%    Output:
 %       t           = time axis of the time series
 %       x           = time series
 %       a0, a1      = Lorentz parameters       
-%	Example:
+%    Example:
 %		[t,x,a0,a1]=gents37('water',5,pi/2,lambda,indref,eta,tcelsius,fs,nt,1);
 %-------------------------------------------------------------------------------
 % Original Dan Chicea Comments:

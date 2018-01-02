@@ -1,7 +1,7 @@
 function [rho]=water_density(t)
 %
 % functia calculeaza cu un polinom de interpolare de gradul 4
-% densitatea apei rho la temperatura t
+% densitatea apei rho la temperatura t (C)
 % parametrii i-am determinat prin fitare in matlab pe date exp.
 %
 % apelare: rho=water_density(15.23);

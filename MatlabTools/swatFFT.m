@@ -1,5 +1,15 @@
 function [sfftmag, sfftphase, f]=swatFFT(x,dt)
-
+%-------------------------------------------------------------------------------
+% Version 20180101, Silviu Rei
+% function 
+%	The function 
+%	Input:
+%
+%	Output:
+%
+%	Example:
+%
+%-------------------------------------------------------------------------------
 
 sfft=fft(x);
 N=length(sfft);

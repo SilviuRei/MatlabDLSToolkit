@@ -1,15 +1,21 @@
 function [x, t] = myIFFT(fftMagnitude, fftPhase, df )
-%------------------------------------------------------------
-%function [x, t] = myIFFT(fftMagnitude, fftPhase, df )
-%Fast Fourier function
-%Input:
+%-------------------------------------------------------------------------------
+% Version 20180101, Silviu Rei
+% function [x, t] = myIFFT(fftMagnitude, fftPhase, df )
+%	The function returns the inverse Fast Fourier transform of a signal
+% 
+% Input:
 %	fftMagnitude = Fast Fourier magnitude
 %	fftPhase = Fast Fourier phase
-%	df = frequency step
-%Output:
-%	x = time series
-%	t = time vector
-%------------------------------------------------------------
+%	frequency = frequency vector
+%	
+% Output:
+%	x		= signal vector
+%	dt		= sampling period
+%	
+% Example:
+%	[x, t] = myIFFT(fftMagnitude, fftPhase, df );
+%-------------------------------------------------------------------------------
 i=complex(0,1);
 N=length(fftMagnitude);
 fftMagnitude=reshape(fftMagnitude,1,N);

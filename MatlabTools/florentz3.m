@@ -1,5 +1,16 @@
-function [s]=florentz2(a0,a1,f);
-%	Version 3.0 20171216 Silviu Rei
+function [s]=florentz3(a0,a1,f);
+%-------------------------------------------------------------------------------
+% Version 20180101, Silviu Rei based on florentz2 by Dan Chicea
+% function 
+%	The function returns the Lorentz function 
+%	Input:
+%		a0,a1 	= Lorentz function parameter
+%		f 	= frequency vector
+%	Output:
+%		s	= Lorentz function vector
+%	Example:
+%		[s] = florentz3(a0,a1,f);
+%-------------------------------------------------------------------------------
 %   Functia  florentz calculeaza valoarea functiei lorentz pe intreg setul de 
 % valori din vectorul de frecvente f si returneaza vectorul cu valorile s 
 %

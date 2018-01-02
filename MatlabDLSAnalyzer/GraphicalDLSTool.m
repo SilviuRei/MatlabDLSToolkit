@@ -1,35 +1,35 @@
-function varargout = DLSTool(varargin)
-% DLSTOOL MATLAB code for DLSTool.fig
-%      DLSTOOL, by itself, creates a new DLSTOOL or raises the existing
+function varargout = GraphicalDLSTool(varargin)
+% GRAPHICALDLSTOOL MATLAB code for GraphicalDLSTool.fig
+%      GRAPHICALDLSTOOL, by itself, creates a new GRAPHICALDLSTOOL or raises the existing
 %      singleton*.
 %
-%      H = DLSTOOL returns the handle to a new DLSTOOL or the handle to
+%      H = GRAPHICALDLSTOOL returns the handle to a new GRAPHICALDLSTOOL or the handle to
 %      the existing singleton*.
 %
-%      DLSTOOL('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in DLSTOOL.M with the given input arguments.
+%      GRAPHICALDLSTOOL('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in GRAPHICALDLSTOOL.M with the given input arguments.
 %
-%      DLSTOOL('Property','Value',...) creates a new DLSTOOL or raises the
+%      GRAPHICALDLSTOOL('Property','Value',...) creates a new GRAPHICALDLSTOOL or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before DLSTool_OpeningFcn gets called.  An
+%      applied to the GUI before GraphicalDLSTool_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to DLSTool_OpeningFcn via varargin.
+%      stop.  All inputs are passed to GraphicalDLSTool_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help DLSTool
+% Edit the above text to modify the response to help GraphicalDLSTool
 
-% Last Modified by GUIDE v2.5 27-Dec-2017 17:43:47
+% Last Modified by GUIDE v2.5 01-Jan-2018 12:03:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @DLSTool_OpeningFcn, ...
-                   'gui_OutputFcn',  @DLSTool_OutputFcn, ...
+                   'gui_OpeningFcn', @GraphicalDLSTool_OpeningFcn, ...
+                   'gui_OutputFcn',  @GraphicalDLSTool_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -45,21 +45,21 @@ end
 
 
 
-% --- Executes just before DLSTool is made visible.
-function DLSTool_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before GraphicalDLSTool is made visible.
+function GraphicalDLSTool_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to DLSTool (see VARARGIN)
+% varargin   command line arguments to GraphicalDLSTool (see VARARGIN)
 
-% Choose default command line output for DLSTool
+% Choose default command line output for GraphicalDLSTool
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
 
-disp('[+++] DLS Tool v1.1 Started');
+disp('[+++] Graphical DLS Tool v1.2 Started');
 set(handles.h_dMin, 'String', '');
 set(handles.h_dMax, 'String', '');
 set(handles.h_dStep, 'String', '');
@@ -139,12 +139,12 @@ set(handles.h_TSGenerateAlgo, 'Value', 1);
 
  
 
-% UIWAIT makes DLSTool wait for user response (see UIRESUME)
+% UIWAIT makes GraphicalDLSTool wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = DLSTool_OutputFcn(hObject, eventdata, handles) 
+function varargout = GraphicalDLSTool_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB

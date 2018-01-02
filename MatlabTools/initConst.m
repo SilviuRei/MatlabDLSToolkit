@@ -1,22 +1,19 @@
 function [dMin,dMax,dStep,indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,a0max,a1start,a1min,a1max,fs,nt,nnHidden,autocorrLags,trainNNFlag,deltaFit]=initConst(dMin,dStep,dMax,thetagrade,tcelsius,pSize,lambda,solvent,fs,nt, nnHidden,autocorrLags,trainNNFlag,deltaFit)
 %-------------------------------------------------------------------------------
-% Version 20171120, Silviu Rei based on initconst4 by Dan Chicea
-% function [indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,a0max,a1start,a1min,a1max,fs,nt]=initConst(thetagrade,tcelsius,pSize,lambda,solvent,fs,nt)
-% 
+% Version 20180101, Silviu Rei based on initconst4 by Dan Chicea
+% function [dMin,dMax,dStep,indref,lambda,eta,tcelsius,theta,pSize,...
+%	a0start,a0min,a0max,a1start,a1min,a1max,fs,nt,nnHidden,autocorrLags,...
+%	trainNNFlag,deltaFit]=initConst(dMin,dStep,dMax,thetagrade,tcelsius,...
+%	pSize,lambda,solvent,fs,nt, nnHidden,autocorrLags,trainNNFlag,deltaFit)
+%
 %   The function initializes the physical constants to be used
-%   with DLS time series generator
-%	Input:
-%       thetagrade  = measuring angle in degrees
-%       tcelsius    = temperature in celsius
-%       solvent     = 'air' for air, 'water' for water
-%       lambda      = wavelength of the laser light
-%       pSize       = particle size in nm
-%       fs          = acquisition frequency
-%       nt          = number of samples in the series
-%       nnHidden    = number of neurons in the hidden layer
-%       autocorrLags= number of lags in the autocorrelation function
-%	Output:
-%		indref      = refractive index of the solvent
+%   with DLS time series generator.
+%   
+%   Input:
+%
+%
+%   Output:
+%	indref      = refractive index of the solvent
 %       lambda      = wavelength of the laser light
 %       eta         = viscosity in N m/s2
 %       tcelsius    = temperature in Celsius
@@ -27,8 +24,8 @@ function [dMin,dMax,dStep,indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,a
 %       nt          = number of samples in the series
 %       nnHidden    = number of neurons in the hidden layer
 %       autocorrLags= number of lags in the autocorrelation function
-%	Example:
-%       [indref,lambda,eta,tcelsius,theta,pSize,a0start,a0min,a0max,a1start,a1min,a1max,frequency,nt,nnHidden,autocorrLags]=initConst(90,20,5,633,'water',16000,32768,150,100)
+%   Example:
+%       
 %-------------------------------------------------------------------------------
 if strcmp(solvent,'air')
     indref=air_indref(lambda,tcelsius,101.325,50,'edlen',1000);%indref=1.0003;%air@20C

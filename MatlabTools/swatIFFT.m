@@ -1,4 +1,15 @@
 function [x,t]=swatIFFT(xmag, xphase, df)
+%-------------------------------------------------------------------------------
+% Version 20180101, Silviu Rei
+% function 
+%	The function 
+%	Input:
+%
+%	Output:
+%
+%	Example:
+%
+%-------------------------------------------------------------------------------
 %Given the magnitude, phase, and frequency step associatied 
 %with the cosine waves that make up the function x, this function
 %returns the values of x, along with the corresponding time
