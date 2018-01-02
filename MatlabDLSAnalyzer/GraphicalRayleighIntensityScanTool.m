@@ -22,7 +22,7 @@ function varargout = GraphicalRayleighIntensityScanTool(varargin)
 
 % Edit the above text to modify the response to help GraphicalRayleighIntensityScanTool
 
-% Last Modified by GUIDE v2.5 02-Jan-2018 16:37:05
+% Last Modified by GUIDE v2.5 02-Jan-2018 21:11:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -79,9 +79,9 @@ set(handles.h_RStep, 'String', '');
 set(handles.h_lambdaMin, 'String', '');
 set(handles.h_lambdaMax, 'String', '');
 set(handles.h_lambdaStep, 'String', '');
-set(handles.h_indrefMin, 'String', '');
-set(handles.h_indrefMax, 'String', '');
-set(handles.h_indrefStep, 'String', '');
+set(handles.h_indrefMinParticle, 'String', '');
+set(handles.h_indrefMaxParticle, 'String', '');
+set(handles.h_indrefStepParticle, 'String', '');
 set(handles.h_dMin, 'String', '');
 set(handles.h_dMax, 'String', '');
 set(handles.h_dStep, 'String', '');
@@ -91,7 +91,7 @@ set(handles.h_display, 'Value', 2);
 set(handles.h_threshold, 'String', '');
 set(handles.h_np, 'String', '');
 set(handles.h_iThreshold, 'String', '');
-set(handles.h_indref, 'String', '');
+set(handles.h_indrefParticle, 'String', '');
 set(handles.h_d, 'String', '');
 set(handles.h_laserPower, 'String', '');
 set(handles.h_theta, 'String', '');
@@ -106,6 +106,9 @@ set(handles.h_temperatureMin, 'String', '');
 set(handles.h_temperatureMax, 'String', '');
 set(handles.h_temperatureStep, 'String', '');
 set(handles.h_solvent, 'Value', 1);
+set(handles.h_indrefMedium, 'String', '');
+set(handles.h_particle, 'Value', 1);
+
 
 % --- Outputs from this function are returned to the command line.
 function varargout = GraphicalRayleighIntensityScanTool_OutputFcn(hObject, eventdata, handles) 
@@ -223,15 +226,16 @@ RStep=str2double(get(handles.h_RStep, 'String'));
 lambdaMin=(str2double(get(handles.h_lambdaMin, 'String')));
 lambdaMax=str2double(get(handles.h_lambdaMax, 'String'));
 lambdaStep=str2double(get(handles.h_lambdaStep, 'String'));
-indrefMin=str2double(get(handles.h_indrefMin, 'String'));
-indrefMax=str2double(get(handles.h_indrefMax, 'String'));
-indrefStep=str2double(get(handles.h_indrefStep, 'String'));
+indrefMinParticle=str2double(get(handles.h_indrefMinParticle, 'String'));
+indrefMaxParticle=str2double(get(handles.h_indrefMaxParticle, 'String'));
+indrefStepParticle=str2double(get(handles.h_indrefStepParticle, 'String'));
 dMin=str2double(get(handles.h_dMin, 'String'));
 dMax=str2double(get(handles.h_dMax, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
 np=str2double(get(handles.h_np, 'String'));
 iThreshold=str2double(get(handles.h_iThreshold, 'String'));
-indref=str2double(get(handles.h_indref, 'String'));
+indrefParticle=str2double(get(handles.h_indrefParticle, 'String'));
+indrefMedium=str2double(get(handles.h_indrefMedium, 'String'));
 d=(str2double(get(handles.h_d, 'String')));
 laserPower=(str2double(get(handles.h_laserPower, 'String')));
 laserPowerMin=(str2double(get(handles.h_laserPowerMin, 'String')));
@@ -249,6 +253,13 @@ temperatureMin=str2double(get(handles.h_temperatureMin, 'String'));
 temperatureMax=str2double(get(handles.h_temperatureMax, 'String'));
 temperatureStep=str2double(get(handles.h_temperatureStep, 'String'));
 solvent=get(handles.h_solvent, 'Value');
+
+indref=indrefParticle/indrefMedium;
+indrefMin=indrefMinParticle/indrefMedium;
+indrefMax=indrefMaxParticle/indrefMedium;
+maxStepsIndrefParticle=(indrefMaxParticle-indrefMinParticle)/indrefStepParticle;
+indrefStep=(indrefMax-indrefMin)/maxStepsIndrefParticle;
+maxStepsIndref=(indrefMax-indrefMin)/indrefStep + 1;
 
 disp('---------------------------------------------------------------------');
 switch scanVar
@@ -291,7 +302,7 @@ switch scanVar
        [~,~,indref1Threshold,indref2Threshold] = batchScatteredRayleigh_indref(np,iThreshold,laserPower,...
             laserSpotDiameter,theta,R,lambda,indref,d,indrefMin,indrefMax,indrefStep,dispMode,saveMode);
        set(handles.h_threshold, 'String', [num2str(indref1Threshold) '/' num2str(indref2Threshold)]);
-       disp(['   [-] Scan Complete. Threshold Refractive Index: ' num2str(indref1Threshold) '/' ...
+       disp(['   [-] Scan Complete. Threshold Relative Refractive Index: ' num2str(indref1Threshold) '/' ...
            num2str(indref2Threshold)]);
     
     case 4 %Particle Size
@@ -430,6 +441,7 @@ function h_default_Callback(hObject, eventdata, handles)
 % hObject    handle to h_default (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 solvent=get(handles.h_solvent, 'Value');
 
 set(handles.h_npMin, 'String', '1.e+4');
@@ -450,9 +462,9 @@ set(handles.h_RStep, 'String', '1');
 set(handles.h_lambdaMin, 'String', '390');
 set(handles.h_lambdaMax, 'String', '700');
 set(handles.h_lambdaStep, 'String', '10');
-set(handles.h_indrefMin, 'String', '0');
-set(handles.h_indrefMax, 'String', '2');
-set(handles.h_indrefStep, 'String', '0.1');
+set(handles.h_indrefMinParticle, 'String', '0');
+set(handles.h_indrefMaxParticle, 'String', '2');
+set(handles.h_indrefStepParticle, 'String', '0.1');
 set(handles.h_dMin, 'String', '1');
 set(handles.h_dMax, 'String', '1500');
 set(handles.h_dStep, 'String', '1');
@@ -467,11 +479,34 @@ set(handles.h_temperature, 'String', '20');
 set(handles.h_temperatureMin, 'String', '0');
 set(handles.h_temperatureMax, 'String', '90');
 set(handles.h_temperatureStep, 'String', '1');
+set(handles.h_particle, 'Value', 1);
+
+particle=get(handles.h_particle, 'Value');
+switch particle
+    case 1 %Smoke
+        set(handles.h_indrefParticle, 'String','1.55');
+    case 2 %Water
+        set(handles.h_indrefParticle, 'String', '1.33');
+    case 3 %Air
+        set(handles.h_indrefParticle, 'String', '1.000268');
+    case 4 %Ice
+        set(handles.h_indrefParticle, 'String', '1.309');
+    case 5 %NaCl
+        set(handles.h_indrefParticle, 'String', '1.544');
+    case 6 %H2SO4
+        set(handles.h_indrefPartice, 'String', '1.426');
+    case 7 %SiO2
+        set(handles.h_indrefPartice, 'String', '1.55');
+    case 8 %Carbon
+        set(handles.h_indrefPartice, 'String', '1.95');        
+    case 9 %Mineral Dust
+        set(handles.h_indrefPartice, 'String', '1.56');        
+end
 
 if solvent == 1
     set(handles.h_np, 'String', '4.e+11');
     set(handles.h_iThreshold, 'String', '0.001');
-    set(handles.h_indref, 'String', '1.33');
+    set(handles.h_indrefMedium, 'String', '1.33');
     set(handles.h_d, 'String', '5');
     set(handles.h_laserPower, 'String', '0.05');
     set(handles.h_theta, 'String', '90');
@@ -481,7 +516,7 @@ if solvent == 1
 elseif solvent == 2
     set(handles.h_np, 'String', '4.e+11');
     set(handles.h_iThreshold, 'String', '0.001');
-    set(handles.h_indref, 'String', '1.000268483');
+    set(handles.h_indrefMedium, 'String', '1.000268483');
     set(handles.h_d, 'String', '5');
     set(handles.h_laserPower, 'String', '0.05');
     set(handles.h_theta, 'String', '4');
@@ -512,9 +547,9 @@ set(handles.h_RStep, 'String', '');
 set(handles.h_lambdaMin, 'String', '');
 set(handles.h_lambdaMax, 'String', '');
 set(handles.h_lambdaStep, 'String', '');
-set(handles.h_indrefMin, 'String', '');
-set(handles.h_indrefMax, 'String', '');
-set(handles.h_indrefStep, 'String', '');
+set(handles.h_indrefMinParticle, 'String', '');
+set(handles.h_indrefMaxParticle, 'String', '');
+set(handles.h_indrefStepParticle, 'String', '');
 set(handles.h_dMin, 'String', '');
 set(handles.h_dMax, 'String', '');
 set(handles.h_dStep, 'String', '');
@@ -524,7 +559,7 @@ set(handles.h_display, 'Value', 2);
 set(handles.h_threshold, 'String', '');
 set(handles.h_np, 'String', '');
 set(handles.h_iThreshold, 'String', '');
-set(handles.h_indref, 'String', '');
+set(handles.h_indrefParticle, 'String', '');
 set(handles.h_d, 'String', '');
 set(handles.h_laserPower, 'String', '');
 set(handles.h_theta, 'String', '');
@@ -539,6 +574,8 @@ set(handles.h_temperatureMin, 'String', '');
 set(handles.h_temperatureMax, 'String', '');
 set(handles.h_temperatureStep, 'String', '');
 set(handles.h_solvent, 'Value', 1);
+set(handles.h_particle, 'Value', 1);
+set(handles.h_indrefMedium, 'String', '');
 
 
 function h_npMin_Callback(hObject, eventdata, handles)
@@ -679,18 +716,18 @@ end
 
 
 
-function h_indrefMin_Callback(hObject, eventdata, handles)
-% hObject    handle to h_indrefMin (see GCBO)
+function h_indrefMinParticle_Callback(hObject, eventdata, handles)
+% hObject    handle to h_indrefMinParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of h_indrefMin as text
-%        str2double(get(hObject,'String')) returns contents of h_indrefMin as a double
+% Hints: get(hObject,'String') returns contents of h_indrefMinParticle as text
+%        str2double(get(hObject,'String')) returns contents of h_indrefMinParticle as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function h_indrefMin_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to h_indrefMin (see GCBO)
+function h_indrefMinParticle_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_indrefMinParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -702,18 +739,18 @@ end
 
 
 
-function h_indrefMax_Callback(hObject, eventdata, handles)
-% hObject    handle to h_indrefMax (see GCBO)
+function h_indrefMaxParticle_Callback(hObject, eventdata, handles)
+% hObject    handle to h_indrefMaxParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of h_indrefMax as text
-%        str2double(get(hObject,'String')) returns contents of h_indrefMax as a double
+% Hints: get(hObject,'String') returns contents of h_indrefMaxParticle as text
+%        str2double(get(hObject,'String')) returns contents of h_indrefMaxParticle as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function h_indrefMax_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to h_indrefMax (see GCBO)
+function h_indrefMaxParticle_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_indrefMaxParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -725,18 +762,18 @@ end
 
 
 
-function h_indrefStep_Callback(hObject, eventdata, handles)
-% hObject    handle to h_indrefStep (see GCBO)
+function h_indrefStepParticle_Callback(hObject, eventdata, handles)
+% hObject    handle to h_indrefStepParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of h_indrefStep as text
-%        str2double(get(hObject,'String')) returns contents of h_indrefStep as a double
+% Hints: get(hObject,'String') returns contents of h_indrefStepParticle as text
+%        str2double(get(hObject,'String')) returns contents of h_indrefStepParticle as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function h_indrefStep_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to h_indrefStep (see GCBO)
+function h_indrefStepParticle_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_indrefStepParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1139,18 +1176,18 @@ end
 
 
 
-function h_indref_Callback(hObject, eventdata, handles)
-% hObject    handle to h_indref (see GCBO)
+function h_indrefParticle_Callback(hObject, eventdata, handles)
+% hObject    handle to h_indrefParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of h_indref as text
-%        str2double(get(hObject,'String')) returns contents of h_indref as a double
+% Hints: get(hObject,'String') returns contents of h_indrefParticle as text
+%        str2double(get(hObject,'String')) returns contents of h_indrefParticle as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function h_indref_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to h_indref (see GCBO)
+function h_indrefParticle_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_indrefParticle (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1391,9 +1428,9 @@ set(handles.h_RStep, 'String', '1');
 set(handles.h_lambdaMin, 'String', '390');
 set(handles.h_lambdaMax, 'String', '700');
 set(handles.h_lambdaStep, 'String', '10');
-set(handles.h_indrefMin, 'String', '0');
-set(handles.h_indrefMax, 'String', '2');
-set(handles.h_indrefStep, 'String', '0.1');
+set(handles.h_indrefMinParticle, 'String', '0');
+set(handles.h_indrefMaxParticle, 'String', '2');
+set(handles.h_indrefStepParticle, 'String', '0.1');
 set(handles.h_dMin, 'String', '1');
 set(handles.h_dMax, 'String', '1500');
 set(handles.h_dStep, 'String', '1');
@@ -1406,7 +1443,7 @@ set(handles.h_save, 'Value', 2);
 set(handles.h_threshold, 'String', '');
 set(handles.h_np, 'String', '4.e+11');
 set(handles.h_iThreshold, 'String', '0.001');
-set(handles.h_indref, 'String', '1.33');
+set(handles.h_indrefParticle, 'String', '1.33');
 set(handles.h_d, 'String', '5');
 set(handles.h_laserPower, 'String', '0.05');
 set(handles.h_theta, 'String', '90');
@@ -1516,6 +1553,7 @@ function h_temperature_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of h_temperature as text
 %        str2double(get(hObject,'String')) returns contents of h_temperature as a double
 solvent = get(handles.h_solvent, 'Value');
+particle = get(handles.h_particle, 'Value');
 temperature = str2double(get(handles.h_temperature, 'String'));
 wavelength = str2double(get(handles.h_lambda, 'String'));
 pressure = 101.325; %kPa - normal air pressure
@@ -1528,7 +1566,13 @@ if solvent == 1
 elseif solvent == 2
     indref=air_indref(wavelength,temperature,pressure,humidity,method,xCO2);
 end
-set(handles.h_indref, 'String', num2str(indref));
+set(handles.h_indrefMedium, 'String', num2str(indref));
+if particle == 2
+    indref=water_indref(temperature,density,wavelength);
+elseif particle == 3
+    indref=air_indref(wavelength,temperature,pressure,humidity,method,xCO2);
+end
+set(handles.h_indrefParticle, 'String', num2str(indref));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -1542,3 +1586,98 @@ function h_temperature_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on selection change in h_particle.
+function h_particle_Callback(hObject, eventdata, handles)
+% hObject    handle to h_particle (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns h_particle contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from h_particle
+
+
+% --- Executes during object creation, after setting all properties.
+function h_particle_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_particle (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+function h_indrefMedium_Callback(hObject, eventdata, handles)
+% hObject    handle to h_indrefMedium (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of h_indrefMedium as text
+%        str2double(get(hObject,'String')) returns contents of h_indrefMedium as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function h_indrefMedium_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_indrefMedium (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in h_set.
+function h_set_Callback(hObject, eventdata, handles)
+% hObject    handle to h_set (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+solvent=get(handles.h_solvent,'Value');
+particle=get(handles.h_particle,'Value');
+temperature = str2double(get(handles.h_temperature, 'String'));
+wavelength = str2double(get(handles.h_lambda, 'String'));
+pressure = 101.325; %kPa - normal air pressure
+humidity = 0.5;
+method = 'edlen';
+xCO2 = 350;
+density=water_density(temperature);
+if solvent == 1
+    indref=water_indref(temperature,density,wavelength);
+elseif solvent == 2
+    indref=air_indref(wavelength,temperature,pressure,humidity,method,xCO2);
+end
+set(handles.h_indrefMedium, 'String', num2str(indref));
+switch particle
+    case 1 %Smoke
+        indref=1.55;
+    case 2 %Water
+        indref=water_indref(temperature,density,wavelength);
+    case 3 %Air
+        indref=air_indref(wavelength,temperature,pressure,humidity,method,xCO2);
+    case 4 %Ice
+        indref=1.309;
+    case 5 %NaCl
+        indref=1.544;
+    case 6 %H2SO4
+        indref=1.426;
+    case 7 %SiO2
+        indref=1.55;
+    case 8 %Carbon
+        indref=1.95;        
+    case 9 %Mineral Dust
+        indref=1.56;        
+end
+set(handles.h_indrefParticle, 'String', num2str(indref));
+
+
+% --- Executes during object creation, after setting all properties.
+function h_default_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to h_default (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
