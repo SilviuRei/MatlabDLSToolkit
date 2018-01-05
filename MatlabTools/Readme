@@ -1,0 +1,8 @@
+2018-01-04
+
+Am imbuntatit secvența de fitare cu chi2 în sensul ca am scris functiile ts_cond1 și ps_cond1 care conditioneaza o matrice cu ts respectiv o matrice cu ps, ambele putand fi pe disc sau ca variabile. După conditionarea ori a ts ori a ps fitarea mege rapid și bine. 
+Pentru fitarea în mod batch a coloanelor matricii care contin ts se poate folosi functia dls_chi2_1a care tot asa poate citi matricea de pe disc sau o primeste ca variabila de intrarea. Are parametrul optcond care controleaza conditionarea ps. Cu parametri de start si limita din functie nu are rost sa fie folosite ambele conditionari; daca este ts conditionata in prealabil se poate pune optcond 0. Daca nu s-a facut trebuie optcond pus 1 si va conditiona ps si va fita rapid o matrice cu serii.
+
+
+Am testat și consiționarea seriilor temporale nu modifică funcțiile de autocorelație ale lor, dar fitarea merge mult mai repede și mai bine.
+

@@ -561,7 +561,7 @@ default_solvent          = 'water';
 default_solvent_nr       = 1;
 default_fs               = 16000;
 default_nt               = 32768;
-default_nnHidden         = 100;
+default_nnHidden         = 220;
 default_autocorrLags     = 599;
 default_a0start          = 4000;
 default_a0min            = 0.001;
@@ -1333,11 +1333,9 @@ a1min=str2double(get(handles.h_a1min, 'String'));
 a1max=str2double(get(handles.h_a1max, 'String'));
 dispMode=get(handles.h_DLSFitDisplay, 'Value');
 cleanMode=get(handles.h_DLSFitClean, 'Value');
-conditioningMode=get(handles.h_TSConditioning, 'Value');
 index1=str2double(get(handles.h_DLSFitIndex1, 'String'));
 index2=str2double(get(handles.h_DLSFitIndex2, 'String'));
 istep=str2double(get(handles.h_DLSFitIStep, 'String'));
-
 if dispMode == 2
     dispMode = 0;
 end
@@ -1345,9 +1343,7 @@ if cleanMode == 2
     cleanMode = 0;
 end
 
-if conditioningMode == 1
-    mTS=ts_cond_12('',mTS,0,0);
-end
+if 
 
 set(handles.h_DLSFitStatus, 'String', 'Status: In Progress');
 [~,~,~,~] = batchDLSFitFindA0A1Size(mTS, ...
@@ -1481,17 +1477,12 @@ dMin=str2double(get(handles.h_dMin, 'String'));
 dMax=str2double(get(handles.h_dMax, 'String'));
 dStep=str2double(get(handles.h_dStep, 'String'));
 dispMode=get(handles.h_AutocorrDisplay, 'Value');
-conditioningMode=get(handles.h_TSConditioning, 'Value');
 autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
 i1=str2double(get(handles.h_AutocorrI1, 'String'));
 i2=str2double(get(handles.h_AutocorrI2, 'String'));
 istep=str2double(get(handles.h_AutocorrIStep, 'String'));
 if dispMode == 2
     dispMode = 0;
-end
-
-if conditioningMode == 1
-    mTS=ts_cond_12('',mTS,0,0);
 end
 
 set(handles.h_AutocorrStatus, 'String', 'Status: In Progress');
@@ -1670,18 +1661,12 @@ cd(filepath);
 fs=str2double(get(handles.h_fs, 'String'));
 nnHidden=str2double(get(handles.h_nnHidden, 'String'));
 dispMode=get(handles.h_NNFitDisplay, 'Value');
-conditioningMode=get(handles.h_TSConditioning, 'Value');
 autocorrLags=str2double(get(handles.h_autocorrLags, 'String'));
 index1=str2double(get(handles.h_NNFitIndex1, 'String'));
 index2=str2double(get(handles.h_NNFitIndex2, 'String'));
 istep=str2double(get(handles.h_NNFitIStep, 'String'));
-
 if dispMode == 2
     dispMode = 0;
-end
-
-if conditioningMode == 1
-    mTS=ts_cond_12('',mTS,0,0);
 end
 
 set(handles.h_NNFitStatus, 'String', 'Status: In Progress');

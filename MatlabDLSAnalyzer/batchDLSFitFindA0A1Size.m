@@ -41,6 +41,12 @@ disp(['    [+] Using ' 'index-' num2str(index1) '-' num2str(istep) '-' num2str(i
     'indref-' num2str(indref) '-'...
     'eta-' num2str(eta) '-'... 
     '_f-' num2str(fs)]);
+
+dirName = 'plots';
+mkdir(dirName);
+cd(dirName);
+
+
 control=2;
 tip='png';
 t0 = clock;
@@ -80,7 +86,7 @@ for i=index1:istep:index2
     %ts = load(namefile);
     %ts = fltr(ts, 16000, 1, 50, 1);
     disp('    [+] Calculating Power Spectrum');
-    psdts=ps_dls5v2(name,mTs(:,i),fs,6,0,'png',control, dispMode);
+    psdts=ps_dls52v2(name,mTs(:,i),fs,6,0,'png',control, dispMode);
     disp('    [-] Power Spectrum Calculation Complete');
     disp('    [+] Starting DLS Fit Procedure');
     [d(i),a0(i),a1(i),~,~]=chi2dlslsq3v2(psdts,theta,indref,...
@@ -134,6 +140,8 @@ saveNameDeltaT=['dlsFitFindA0A1D_deltat_index-' num2str(index1) '-' num2str(iste
     'indref-' num2str(indref) '-'...
     'eta-' num2str(eta) '-'... 
     '_f-' num2str(fs),'.txt'];
+
+cd('..');
 
 save(saveNameA0,'a0','-ascii');
 disp(['   [+] File Saved: ' saveNameA0]);

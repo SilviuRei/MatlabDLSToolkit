@@ -196,7 +196,42 @@ function h_scan_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-spotSize = 1.e-3;
+solvent=get(handles.h_solvent,'Value');
+particle=get(handles.h_particle,'Value');
+temperature = str2double(get(handles.h_temperature, 'String'));
+wavelength = str2double(get(handles.h_lambda, 'String'));
+pressure = 101.325; %kPa - normal air pressure
+humidity = 0.5;
+method = 'edlen';
+xCO2 = 350;
+density=water_density(temperature);
+if solvent == 1
+    indref=water_indref(temperature,density,wavelength);
+elseif solvent == 2
+    indref=air_indref(wavelength,temperature,pressure,humidity,method,xCO2);
+end
+set(handles.h_indrefMedium, 'String', num2str(indref));
+switch particle
+    case 1 %Smoke
+        indref=1.55;
+    case 2 %Water
+        indref=water_indref(temperature,density,wavelength);
+    case 3 %Air
+        indref=air_indref(wavelength,temperature,pressure,humidity,method,xCO2);
+    case 4 %Ice
+        indref=1.309;
+    case 5 %NaCl
+        indref=1.544;
+    case 6 %H2SO4
+        indref=1.426;
+    case 7 %SiO2
+        indref=1.55;
+    case 8 %Carbon
+        indref=1.95;        
+    case 9 %Mineral Dust
+        indref=1.56;        
+end
+set(handles.h_indrefParticle, 'String', num2str(indref));
 
 scanVar=get(handles.h_scanningVariable, 'Value');
 dispMode=get(handles.h_display, 'Value');
@@ -214,9 +249,6 @@ npStep=str2double(get(handles.h_npStep, 'String'));
 iThresholdMin=str2double(get(handles.h_iThresholdMin, 'String'));
 iThresholdMax=str2double(get(handles.h_iThresholdMax, 'String'));
 iThresholdStep=str2double(get(handles.h_iThresholdStep, 'String'));
-iZeroMin=(str2double(get(handles.h_laserPowerMin, 'String')))/(pi*((spotSize/2)^2));
-iZeroMax=(str2double(get(handles.h_laserPowerMax, 'String')))/(pi*((spotSize/2)^2));
-iZeroStep=(str2double(get(handles.h_laserPowerStep, 'String')))/(pi*((spotSize/2)^2));
 thetaMin=str2double(get(handles.h_thetaMin, 'String'));
 thetaMax=str2double(get(handles.h_thetaMax, 'String'));
 thetaStep=str2double(get(handles.h_thetaStep, 'String'));
@@ -451,7 +483,7 @@ set(handles.h_iThresholdMin, 'String', '0.001');
 set(handles.h_iThresholdMax, 'String', '1');
 set(handles.h_iThresholdStep, 'String', '0.001');
 set(handles.h_laserPowerMin, 'String', '0')
-set(handles.h_laserPowerMax, 'String', '1');
+set(handles.h_laserPowerMax, 'String', '12');
 set(handles.h_laserPowerStep, 'String', '0.001');
 set(handles.h_thetaMin, 'String', '0');
 set(handles.h_thetaMax, 'String', '180');
@@ -480,6 +512,15 @@ set(handles.h_temperatureMin, 'String', '0');
 set(handles.h_temperatureMax, 'String', '90');
 set(handles.h_temperatureStep, 'String', '1');
 set(handles.h_particle, 'Value', 1);
+set(handles.h_laserPower, 'String', '2');
+set(handles.h_np, 'String', '4.e+11');
+set(handles.h_iThreshold, 'String', '0.001');
+set(handles.h_d, 'String', '5');
+set(handles.h_theta, 'String', '90');
+set(handles.h_R, 'String', '10');
+set(handles.h_lambda, 'String', '532');
+set(handles.h_laserSpotDiameter, 'String', '1');
+
 
 particle=get(handles.h_particle, 'Value');
 switch particle
@@ -504,25 +545,9 @@ switch particle
 end
 
 if solvent == 1
-    set(handles.h_np, 'String', '4.e+11');
-    set(handles.h_iThreshold, 'String', '0.001');
     set(handles.h_indrefMedium, 'String', '1.33');
-    set(handles.h_d, 'String', '5');
-    set(handles.h_laserPower, 'String', '0.05');
-    set(handles.h_theta, 'String', '90');
-    set(handles.h_R, 'String', '10');
-    set(handles.h_lambda, 'String', '633');
-    set(handles.h_laserSpotDiameter, 'String', '1');
 elseif solvent == 2
-    set(handles.h_np, 'String', '4.e+11');
-    set(handles.h_iThreshold, 'String', '0.001');
     set(handles.h_indrefMedium, 'String', '1.000268483');
-    set(handles.h_d, 'String', '5');
-    set(handles.h_laserPower, 'String', '0.05');
-    set(handles.h_theta, 'String', '4');
-    set(handles.h_R, 'String', '10');
-    set(handles.h_lambda, 'String', '633');
-    set(handles.h_laserSpotDiameter, 'String', '1');
 end
 % --- Executes on button press in h_clear.
 function h_clear_Callback(hObject, eventdata, handles)

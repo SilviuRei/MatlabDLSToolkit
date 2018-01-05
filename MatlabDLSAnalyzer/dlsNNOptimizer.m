@@ -72,9 +72,9 @@ for i=1:maxI
         disp('   [-] Training Complete');
         disp(['   [+] Evaluating Neural Network Performance. Step '...
             num2str(j) ' out of ' num2str(averagingSteps) ]);
-        [dnn] = dlsNNFitNoACF (tsName,mACF,dMin,dMax,dStep,index1,index2,...
-            istep,autocorrLags,nnHidden(i),fs,dispMode);
-        [temp_mF, temp_errabs, temp_errel] = xdif (dm(:,index1:index2), dnn);
+        [dnn] = dlsNNFitNoACF (tsName,mACF,dMin,dMax,dStep,...
+            autocorrLags,nnHidden(i),fs,dispMode);
+        [temp_mF, temp_errabs, temp_errel] = xdif (dm(:,dMin:dMax), dnn);
         mF_temp = mF_temp + temp_mF;
         errabs_temp = errabs_temp + temp_errabs;
         errel_temp = errel_temp + temp_errel;            

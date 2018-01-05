@@ -38,23 +38,25 @@ plot(np,iS, 'b-');
 ylabel('Scattered Intensity (W/m2)');
 xlabel('Number of Particles in the Scattering Volume');
 xlim([np(1) np(maxSteps)]);
-hold on;
-pslimy=get(gca,'ylim');
-pslimx=get(gca,'xlim');
-plot([npThreshold npThreshold], pslimy, 'r--');
-plot(pslimx, [iS(indexThreshold) iS(indexThreshold)], 'r--');
-hold off;
 
-legend('Scattered Intensity','Minimum Detectable Intensity (0.001 W/m2)');
-
+if npThreshold > 0
+  hold on;
+  pslimy=get(gca,'ylim');
+  pslimx=get(gca,'xlim');
+  plot([npThreshold npThreshold], pslimy, 'r--');
+  plot(pslimx, [iS(indexThreshold) iS(indexThreshold)], 'r--');
+  hold off;
+  legend('Scattered Intensity','Minimum Detectable Intensity (0.001 W/m2)');
+end
 
 if saveMode == 1
-  figName=['plot_I_lasPow-' num2str(laserPower)  ...
+  figName=['plot_IRayleighNPThreshold-' num2str(npThreshold)...
+	'lasPow-' num2str(laserPower)  ...
         '-lasSpotDiam-' num2str(laserSpotDiameter) ...
-        'theta-' num2str(theta) ...
+        '-theta-' num2str(theta) ...
         '-R-' num2str(R) '-lambda-' num2str(lambda) '-indref-' num2str(indref)...
         '-d-' num2str(d) ...
-        '-np-' num2str(npMin) '-' num2str(npStep) '-' num2str(npMax) '-iThreshold-' num2str (iThreshold) '.png'];
+        '-np-' num2str(npMin) '-' num2str(npStep) '-' num2str(npMax) '-iThreshold-' num2str(iThreshold) '.png'];
     saveas(figNum,figName,'png');
 end
 

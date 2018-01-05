@@ -23,7 +23,7 @@ t0 = clock;
 
 % Create directories for saving the files
 mkdir('nn_dls');
-%mkdir('nn_dls/nn_dls_figs');
+mkdir('nn_dls/nn_dls_figs');
 %mkdir('nn_dls/nn_dls_workspace');
 mkdir('nn_dls/nn_dls_data');
 
@@ -73,12 +73,13 @@ performance = perform(net,d,y);
 %saveas(h, 'nn_dls/nn_dls_figs/nn_dls_trainstate.png');
 %h = figure, ploterrhist(e)
 %saveas(h, 'nn_dls/nn_dls_figs/nn_dls_errhist.png');
-%h = figure, plotregression(d,y);
+h = figure('visible','off');
+plotregression(d,y);
 %h = plotregression(d,y);
-%disp(['   [+] Saving File nn_dls/nn_dls_figs/nn_dls_regression-' num2str(nnHidden) ...
-%        '-' trainFcn '.png']);
-%saveas(h, ['nn_dls/nn_dls_figs/nn_dls_regression-' num2str(nnHidden) ...
-%        '-' trainFcn '.png']);
+disp(['   [+] File saved: nn_dls/nn_dls_figs/nn_dls_regression-' num2str(nnHidden) ...
+        '-' trainFcn '.png']);
+saveas(h, ['nn_dls/nn_dls_figs/nn_dls_regression-' num2str(nnHidden) ...
+        '-' trainFcn '.png']);
 
 
 %h = figure, plotfit(net,x,t)

@@ -13,6 +13,10 @@ figureNumber2=21;
 figureNumber3=22;
 figureNumber4=23;
 
+dirName='plots';
+mkdir(dirName);
+cd(dirName);
+
 disp('[+++] Error Estimation Function Started');
 
 [~, errabsFitDLS, errelFitDLS] = xdif(d, dFitDLS);
@@ -22,18 +26,6 @@ disp('   [-] Error Estimation Complete');
 
 errelFitDLS = errelFitDLS.*100;
 errelFitNN = errelFitNN.*100;
-
-save('dlsFitErrAbs.txt','errabsFitDLS','-ascii');
-disp('   [+] File Saved: dlsFitErrAbs.txt')
-
-save('dlsNNErrAbs.txt','errabsFitNN','-ascii');
-disp('   [+] File Saved: dlsNNErrAbs.txt')
-
-save('dlsFitErrRel.txt','errelFitDLS','-ascii');
-disp('   [+] File Saved: dlsFitErrRel.txt')
-
-save('dlsNNErrRel.txt','errelFitNN','-ascii');
-disp('   [+] File Saved: dlsNNErrRel.txt')
 
 if dispMode==1
     figure(figureNumber1);
@@ -86,4 +78,20 @@ disp('   [+] File Saved: plot_dlsFitErrRel.png')
 
 saveas(figureNumber4,'plot_dlsNNErrRel',typeG);
 disp('   [+] File Saved: plot_dlsNNErrRel.png')
+
+cd('..');
+
+save('dlsFitErrAbs.txt','errabsFitDLS','-ascii');
+disp('   [+] File Saved: dlsFitErrAbs.txt')
+
+save('dlsNNErrAbs.txt','errabsFitNN','-ascii');
+disp('   [+] File Saved: dlsNNErrAbs.txt')
+
+save('dlsFitErrRel.txt','errelFitDLS','-ascii');
+disp('   [+] File Saved: dlsFitErrRel.txt')
+
+save('dlsNNErrRel.txt','errelFitNN','-ascii');
+disp('   [+] File Saved: dlsNNErrRel.txt')
+
+
 disp('[+++] Error Estimation Function Complete');

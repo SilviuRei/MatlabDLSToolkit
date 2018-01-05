@@ -25,6 +25,10 @@ disp(['   [+] Using ' tsName]);
 h=999;
 m=999;
 s=999;
+
+dirName='plots';
+cd(dirName);
+
 k=1;    % coloana 1 va corespunde primei serii temporale din selectie
 numSteps = (i2-i1)/istep+1;
 waitbarHandle = waitbar(0,['Computing Autocorrelation...' ...
@@ -49,6 +53,9 @@ end
 close(waitbarHandle);
 tlags=lags./fs;     % tlags reprezinta timpul (abscisa functiei de autocorelatie)
 % that's all
+
+cd('..');
+
 save(['acf_' tsName '.txt'],'acf','-ascii');
 disp(['   [+] File Saved: acf_' tsName '.txt']);
 disp('[+++] Autocorrelation Computing Complete');

@@ -41,6 +41,11 @@ function [roF] = batchDLSRollOffFrequencySize (a0,a1,startSize,endSize,...
     h=999;
     m=999;
     s=999;
+    
+    dirName='plots';
+    mkdir(dirName);
+    cd(dirName);
+    
     deltaInterval = endSize - startSize;
     maxDeltaInterval = deltaInterval/stepSize+1;
     dn=startSize:stepSize:endSize;
@@ -136,6 +141,8 @@ function [roF] = batchDLSRollOffFrequencySize (a0,a1,startSize,endSize,...
 
     saveas(figureNumber3,figureNameRoF,figType);
     disp(['   [+] Figure Saved: ' figureNameRoF]);
+    
+    cd('..');
     
     save([fileNameRoF '.txt'],'roF','-ascii');
     disp(['   [+] File Saved: ' fileNameRoF '.txt']);
